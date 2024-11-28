@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import googleIcon from '../../assets/googleIcon.png';
-import fbIcon from '../../assets/facebookIcon.png'
+import googleIcon from '../assets/googleIcon.png';
+import fbIcon from '../assets/facebookIcon.png'
 
 const LogIn = () => {
   const [show, setShow] = useState(false);
