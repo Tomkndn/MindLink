@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import bgImg from '../../assets/loginBackGround.png';
+import bgImg from '../assets/loginBackGround.png';
 import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import googleIcon from '../../assets/googleIcon.png';
-import fbIcon from '../../assets/facebookIcon.png';
+import googleIcon from '../assets/googleIcon.png';
+import fbIcon from '../assets/facebookIcon.png';
 
 const SignUp = () => {
   const [show, setShow] = useState(false);
