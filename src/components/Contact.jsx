@@ -1,4 +1,6 @@
 import React from "react";
+import image from "../assets/contactus.jpg";
+
 
 const Contact = () => {
   return (
@@ -6,8 +8,7 @@ const Contact = () => {
       {/* Left Image and Boxes */}
       <div className="relative">
         {/* Light Grey Image Placeholder */}
-        <div className="relative bg-blue-400 w-64 h-72 rounded-lg z-20"></div>
-
+        <img className="relative bg-blue-400 w-64 h-72 rounded-lg z-20" src={image}/>
         {/* Top Small Box */}
         <div className="bg-gray-600 w-24 h-24 rounded-lg absolute top-[-30px] right-[-25px] z-10"></div>
 

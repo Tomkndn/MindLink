@@ -1,5 +1,5 @@
 import React from "react";
-import demo from "../assets/facebookIcon.png";
+import demo from "../assets/6804681.jpg";
 
 const ServiceSection = () => {
   return (
