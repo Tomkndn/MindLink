@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Navigate, NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import bgImg from '../assets/loginBackGround.png';
@@ -7,6 +7,8 @@ import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import googleIcon from '../assets/googleIcon.png';
 import fbIcon from '../assets/facebookIcon.png';
+import useStore from '../store/useStore';
+import LoadingPage from '../components/Loading';
 
 const SignUp = () => {
   const [show, setShow] = useState(false);
@@ -14,8 +16,16 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
-  const navigate=useNavigate();
+  const { SignUp, loading, error, isAuthenticated } = useStore();
+  const navigate = useNavigate();
   
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  if(loading) {
+    return <LoadingPage />
+  }
 
   const showPswdHandler =(e)=> {
     e.preventDefault();
@@ -44,28 +54,18 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      //for api call
-      // const config = {
-      //   headers: {"Content-type": "application/json"},
-      // };
-      // const {data}= await axios.post(`/signup`,
-      //   {name, email, password},
-      //   config
-      // )
-      
-      toast.success('Registration successful.', {
+    const response = await SignUp({ name, email, password });
+
+    if (response.ok) {
+      toast.success(data.message || 'Registration successful.', {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: true,
         closeOnClick: true,
       });
-
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-
-      toast.error('Error occurred! Something went wrong.', {
+      navigate('/login');
+    } else {
+      toast.error(error || 'Error occurred! Something went wrong.', {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: true,
@@ -149,7 +149,7 @@ const SignUp = () => {
             type="submit"
             className="m px-9 bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-700 transition duration-300"
           >
-            Submit
+            {loading ? "Signing Up..." : "Signup"}
           </button>
         </form>
 
@@ -189,4 +189,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default SignUp;
