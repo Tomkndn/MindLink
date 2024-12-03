@@ -1,6 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import useStore from '../store/useStore';
 
 function Hero() {
+  const { isAuthenticated } = useStore()
+
   return (
     <div>
       <section className="mb-10 w-full flex justify-center items-center relative top-[70px] px-[3vw] pb-[3vw]">
@@ -15,14 +19,21 @@ function Hero() {
           {/* Text Overlay */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-black bg-opacity-50 p-10 rounded-lg">
             <h1 className="text-white text-4xl font-bold mb-4">
-              Experience <span className="text-orange-500">The Magic Of Group Study</span>
+              Experience{" "}
+              <span className="text-orange-500">The Magic Of Group Study</span>
             </h1>
             <p className="text-white text-lg leading-6">
               Join hands to make learning a collaborative journey.
             </p>
-            <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md text-lg hover:bg-green-700 transition">
-              Login
-            </button>
+            {isAuthenticated ? (
+              <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md text-lg hover:bg-green-700 transition">
+                <Link to="/dashboard">Go to Dashboard</Link>
+              </button>
+            ) : (
+              <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md text-lg hover:bg-green-700 transition">
+                <Link to="/login">Login</Link>
+              </button>
+            )}
           </div>
         </div>
       </section>

@@ -4,6 +4,7 @@ const baseUrl = import.meta.env.VITE_API_URL;
 const useStore = create((set) => ({
   user: null,
   isAuthenticated: false,
+  profileUpdated: false,
   loading: false,
   error: null,
 
@@ -20,8 +21,9 @@ const useStore = create((set) => ({
         });
 
         if (response.ok) {
-          const { user } = await response.json();
-          set({ user, isAuthenticated: true, loading: false });
+          const data = await response.json();
+          
+          set({ user: data, isAuthenticated: true,profileUpdated: data.profileUpdated, loading: false });
         } else {
           localStorage.removeItem("token");
           set({ user: null, isAuthenticated: false, loading: false });
@@ -55,7 +57,7 @@ const useStore = create((set) => ({
     }
   },
 
-  signIn: async ({ email, password }) => {
+signIn: async ({ email, password }) => {
     set({ loading: true, error: null });
     try {
       const response = await fetch(baseUrl + "/api/auth/signin", {
@@ -69,11 +71,16 @@ const useStore = create((set) => ({
         throw new Error(data.message || "Login failed");
       }
 
-      const { token } = await response.json();
+      const data = await response.json();
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", data.token);
 
-      set({ user: { email }, isAuthenticated: true, loading: false });
+      set({
+        user: data ,
+        profileUpdated: data.profileUpdated,
+        isAuthenticated: true,
+        loading: false,
+      });
 
       return true;
     } catch (error) {

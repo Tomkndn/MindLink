@@ -28,7 +28,7 @@ const signin = async (req, res) => {
   try {
     if(!email || !password) return res.status(400).json({ error: "Please fill in all fields" });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select("+password");
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -37,7 +37,11 @@ const signin = async (req, res) => {
     const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
       expiresIn: "2h",
     });
-    res.status(200).json({ token });
+
+    const userData = user.toObject();
+    delete userData.password;
+
+    res.status(200).json({ token,id: user._id, username: user.username,profileUpdated: user.profileUpdated });
   } catch (err) {
     res.status(500).json({ error: "Server error during login" });
   }
@@ -60,7 +64,7 @@ const verify = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.json({ valid: true });
+    return res.json({ valid: true, id: user._id, username: user.username,profileUpdated: user.profileUpdated });
   });
 };
 

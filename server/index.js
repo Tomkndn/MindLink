@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db.config');
 const authRoutes = require('./routes/auth.routes');
+const userRoutes = require('./routes/user.routes');
 dotenv.config();
 
 const app = express();
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/user', userRoutes);
 
 
 // 404 wala error

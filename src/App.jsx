@@ -1,6 +1,6 @@
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import './App.css'
-import {Routes, Route, NavLink} from 'react-router-dom';
+import {Routes, Route, NavLink,Navigate, useLocation} from 'react-router-dom';
 import LogIn from './Pages/LogIn'
 import SignUp from './Pages/SignUp'
 import Meeting from './Pages/Meeting';
@@ -9,9 +9,8 @@ import UpdateProfile from './Pages/UpdateProfile';
 import Chat from './Pages/Chat';
 import Dashboard from './Pages/Dashboard';
 import Home from './Pages/Home';
-import ProtectedRoute from './components/ProtectedRoute';
 import useStore from './store/useStore';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import LoadingPage from './components/Loading';
 
 function App() {
@@ -28,19 +27,37 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} exact />
-        <Route path="/login" element={<LogIn />} exact />
-        <Route path="/signup" element={<SignUp />} exact />
+        <Route
+          path="/login"
+          element={
+            <Redirect>
+              <LogIn />
+            </Redirect>
+          }
+          exact
+        />
+        <Route
+          path="/signup"
+          element={
+            <Redirect>
+              <SignUp />
+            </Redirect>
+          }
+          exact
+        />
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <RedirectToProfile>
+                <Dashboard />
+              </RedirectToProfile>
             </ProtectedRoute>
           }
           exact
         />
         <Route
-          path="/updateProfile"
+          path="/updateprofile"
           element={
             <ProtectedRoute>
               <UpdateProfile />
@@ -52,7 +69,9 @@ function App() {
           path="/resource"
           element={
             <ProtectedRoute>
-              <Resource />
+              <RedirectToProfile>
+                <Resource />
+              </RedirectToProfile>
             </ProtectedRoute>
           }
           exact
@@ -61,16 +80,20 @@ function App() {
           path="/chat"
           element={
             <ProtectedRoute>
-              <Chat />
+              <RedirectToProfile>
+                <Chat />
+              </RedirectToProfile>
             </ProtectedRoute>
           }
           exact
         />
         <Route
-          path="/meeting/api/auth/"
+          path="/meeting"
           element={
             <ProtectedRoute>
-              <Meeting />
+              <RedirectToProfile>
+                <Meeting />
+              </RedirectToProfile>
             </ProtectedRoute>
           }
           exact
@@ -98,3 +121,54 @@ function NotFound() {
     </div>
   );
 }
+
+const Redirect = ({ children }) => {
+  const { isAuthenticated, loading, profileUpdated } = useStore();
+  const location = useLocation();
+
+  if (loading) return <LoadingPage />;
+
+  if (isAuthenticated) {
+    const from = location.state?.from?.pathname || "/dashboard";
+
+    return <Navigate to={from} replace />;
+  }
+
+  return children;
+};
+
+const RedirectToProfile = ({ children }) => {
+  const { isAuthenticated, loading, profileUpdated } = useStore();
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && !profileUpdated && !toastDisplayed) {
+      toast.warning("Please update your profile to continue.", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+      setToastDisplayed(true); 
+    }
+  }, [isAuthenticated, profileUpdated, toastDisplayed]);
+
+  if (loading) return <LoadingPage />;
+
+  if (!profileUpdated) {
+    return <Navigate to="/updateprofile" replace />;
+  }
+
+  return children;
+};
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading, profileUpdated } = useStore();
+  const location = useLocation();
+
+  if (loading) return <LoadingPage />;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  
+  return children;
+};
