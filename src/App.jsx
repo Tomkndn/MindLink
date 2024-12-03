@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import useStore from './store/useStore';
 import { useEffect } from 'react';
 import LoadingPage from './components/Loading';
+import PastMeeting from './Pages/PastMeeting';
 
 function App() {
   const { initializeAuth, loading } = useStore();
@@ -30,6 +31,8 @@ function App() {
         <Route path="/" element={<Home />} exact />
         <Route path="/login" element={<LogIn />} exact />
         <Route path="/signup" element={<SignUp />} exact />
+        <Route path="/PastMeeting" element={<PastMeeting />} exact />
+        
         <Route
           path="/dashboard"
           element={
