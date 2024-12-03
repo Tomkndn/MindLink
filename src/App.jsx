@@ -12,6 +12,7 @@ import Home from './Pages/Home';
 import useStore from './store/useStore';
 import { useEffect,useState } from 'react';
 import LoadingPage from './components/Loading';
+import PastMeeting from './Pages/PastMeeting';
 
 function App() {
   const { initializeAuth, loading } = useStore();
@@ -45,6 +46,18 @@ function App() {
           }
           exact
         />
+        <Route
+          path="/PastMeeting"
+          element={
+            <ProtectedRoute>
+              <RedirectToProfile>
+                <PastMeeting />
+              </RedirectToProfile>
+            </ProtectedRoute>
+          }
+          exact
+        />
+
         <Route
           path="/dashboard"
           element={
