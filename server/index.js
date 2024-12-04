@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db.config');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
+const chatRoutes = require('./routes/chat.routes');
+const messageRoutes = require('./routes/message.routes')
+const { globalErrorHandler } = require('./middleware/error.middleware');
 dotenv.config();
 
 const app = express();
@@ -29,9 +32,14 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/message', messageRoutes);
 
 
 // 404 wala error
 app.use((req, res, next) => {
   res.status(404).json({ message: "Route not found" });
 });
+
+// Global Error Handler
+app.use(globalErrorHandler);
