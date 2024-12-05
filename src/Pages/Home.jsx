@@ -5,7 +5,7 @@ import Services from "../components/Services";
 import Navbar from "../components/Navbar";
 import TopSection from "../components/TopSection";
 import Session from "../components/Session";
-import Hero from "../components/Hero"
+import Hero from "../components/Hero";
 
 const Home = () => {
   return (

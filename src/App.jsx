@@ -102,6 +102,7 @@ function App() {
         />
         <Route
           path="/meeting"
+          path="/meeting"
           element={
             <ProtectedRoute>
               <RedirectToProfile>
