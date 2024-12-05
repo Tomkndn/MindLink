@@ -67,11 +67,11 @@ function App() {
           exact
         />
         <Route
-          path="/meeting/api/auth/"
+          path="/meeting"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Meeting />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
           exact
         />
