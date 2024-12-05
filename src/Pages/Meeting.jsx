@@ -1,10 +1,15 @@
-import React from 'react'
+import React from 'react';
+
+import MeetingList from "../components/MeetingList";
+
 
 function Meeting() {
   return (
-    <div>
-      meeting
-    </div>
+    <>
+    
+      <MeetingList/>
+      
+    </>
   )
 }
 
