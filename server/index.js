@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db.config');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
+const meetingRoutes = require('./routes/Meetings.js');
 dotenv.config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/meeting', meetingRoutes);
 
 
 // 404 wala error
