@@ -7,6 +7,7 @@ const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
 const messageRoutes = require('./routes/message.routes')
 const { globalErrorHandler } = require('./middleware/error.middleware');
+const meetingRoutes = require('./routes/Meetings.js');
 dotenv.config();
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
+app.use('/meeting', meetingRoutes);
 
 
 // 404 wala error
