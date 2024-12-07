@@ -1,28 +1,19 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import googleIcon from '../assets/googleIcon.png';
 import fbIcon from '../assets/facebookIcon.png'
 import useStore from "../store/useStore";
-import LoadingPage from "../components/Loading";
 
 const LogIn = () => {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { signIn, loading, error, isAuthenticated } = useStore();
-
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" email ={email }replace />;
-  }
-
-  if(loading) {
-    return <LoadingPage />
-  }
+  const { signIn, loading, error } = useStore();
   
   const showPswdHandler =(e)=> {
     e.preventDefault();

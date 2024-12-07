@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-  const URI = 'mongodb://localhost:27017/MindLink';
+  const URI = process.env.MONGODB_URI;
   try {
     await mongoose.connect(URI);
   } catch (error) {
