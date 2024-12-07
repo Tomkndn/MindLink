@@ -8,6 +8,9 @@ const chatRoutes = require('./routes/chat.routes');
 const messageRoutes = require('./routes/message.routes')
 const { globalErrorHandler } = require('./middleware/error.middleware');
 const meetingRoutes = require('./routes/Meetings.js');
+const focusSessionRoutes = require('./routes/FocusSessionRoutes');
+const groupRoutes = require('./routes/GroupRoutes');
+
 dotenv.config();
 
 const app = express();
@@ -32,6 +35,9 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/focus-session', focusSessionRoutes);
+app.use('/api/group',groupRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
@@ -43,5 +49,4 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Global Error Handler
 app.use(globalErrorHandler);

@@ -13,6 +13,12 @@ import useStore from './store/useStore';
 import { useEffect,useState } from 'react';
 import LoadingPage from './components/Loading';
 import PastMeeting from './Pages/PastMeeting';
+import FocusSessionTimer from './components/FocusSessionTimer'
+import GroupList from './components/GroupList'
+import CreateGroup from './components/CreateGroup'
+import InviteUser from './components/InviteUser';
+import Invitations from './components/Invitations';  
+import GroupChat from './Pages/GroupChat';
 
 function App() {
   const { initializeAuth, loading } = useStore();
@@ -46,6 +52,36 @@ function App() {
           }
           exact
         />
+         <Route path="/focus" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <FocusSessionTimer />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
+        <Route path="/create" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <CreateGroup />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
+        <Route path="/groups" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <GroupList />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
+        <Route path="/groups/:groupId/invite" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <InviteUser />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
+        <Route path="/invitations" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <Invitations />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
+        <Route path="/groupchat" element={<ProtectedRoute>
+              <RedirectToProfile>
+                <GroupChat />
+              </RedirectToProfile>
+            </ProtectedRoute>} exact/>
         <Route
           path="/PastMeeting"
           element={

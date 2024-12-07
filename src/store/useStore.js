@@ -74,6 +74,7 @@ signIn: async ({ email, password }) => {
       const data = await response.json();
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("email",email);
 
       set({
         user: data ,
