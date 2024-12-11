@@ -1,4 +1,5 @@
 const User = require("../models/User.model");
+const asyncHandler = require('express-async-handler');
 
 const getUserData = async (req, res) => {
   try {
@@ -37,4 +38,16 @@ const updateUserData = async (req, res) => {
   }
 };
 
-module.exports = { getUserData, updateUserData };
+const searchUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search ? {username: { $regex: req.query.search, $options: "i"} } : {};
+  try {
+    const users = await User.find({...keyword, _id:{$ne: req.user.id}});
+    // const users = await User.find(keyword).find({_id:{$ne:req.user._id}});
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users" });
+  }
+})
+
+module.exports = { getUserData, updateUserData, searchUsers };
