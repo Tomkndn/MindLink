@@ -60,8 +60,7 @@ const useStore = create((set) => ({
     }
   },
 
-  signIn: async ({ email, password }) => {
-    console.log("email: " + email , "password: " + password);
+signIn: async ({ email, password }) => {
     set({ loading: true, error: null });
     try {
       const response = await fetch(baseUrl + "/api/auth/signin", {
