@@ -10,6 +10,7 @@ const { globalErrorHandler } = require('./middleware/error.middleware');
 const meetingRoutes = require('./routes/Meetings.js');
 const focusSessionRoutes = require('./routes/FocusSessionRoutes');
 const groupRoutes = require('./routes/GroupRoutes');
+const { Server } = require('socket.io');
 
 dotenv.config();
 
@@ -19,11 +20,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 5000;
+const server=require('http').createServer(app);
 
 // Connect to MongoDB
 connectDB().then(() => {
   console.log('Connected to MongoDB');
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });
 });
@@ -50,3 +52,37 @@ app.use((req, res, next) => {
 });
 
 app.use(globalErrorHandler);
+
+
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:5173"
+  },
+})
+
+io.on("connection", (socket) => {
+  console.log("Connected to socket.io");
+  //client setup
+  socket.on("setup", (userData) => {
+    socket.join(userData.user.id);
+    console.log(`${userData.user.username} joined room-${userData.user.id}`);
+    socket.emit("connected");
+  })
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log(`User Joined to chat Room: ${room}`);
+  });
+
+  socket.on("new message", (newMessageRec) => {
+    let chat = newMessageRec.chat;
+    console.log(chat.users);
+    
+    if(!chat.users) return console.log("Chat users not defined");
+    chat.users.forEach(user => {
+      socket.in(user._id).emit("message received", newMessageRec)
+    })
+    
+  })
+})
