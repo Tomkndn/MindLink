@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { Navigate, NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import bgImg from '../assets/loginBackGround.png';
-import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import googleIcon from '../assets/googleIcon.png';
 import fbIcon from '../assets/facebookIcon.png';
 import useStore from '../store/useStore';
-import LoadingPage from '../components/Loading';
 
 const SignUp = () => {
   const [show, setShow] = useState(false);
@@ -16,16 +15,8 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
-  const { SignUp, loading, error, isAuthenticated } = useStore();
+  const { signUp, loading, error } = useStore();
   const navigate = useNavigate();
-  
-  if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  if(loading) {
-    return <LoadingPage />
-  }
 
   const showPswdHandler =(e)=> {
     e.preventDefault();
@@ -54,9 +45,9 @@ const SignUp = () => {
       return;
     }
 
-    const response = await SignUp({ name, email, password });
+    const response = await signUp({ name, email, password });
 
-    if (response.ok) {
+    if (response) {
       toast.success(data.message || 'Registration successful.', {
         position: "bottom-right",
         autoClose: 5000,

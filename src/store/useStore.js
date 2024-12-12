@@ -1,9 +1,11 @@
 import { create } from "zustand";
 
-const baseUrl = import.meta.env.VITE_API_URL;
+// const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = "http://localhost:5000"
 const useStore = create((set) => ({
   user: null,
   isAuthenticated: false,
+  profileUpdated: false,
   loading: false,
   error: null,
 
@@ -20,8 +22,9 @@ const useStore = create((set) => ({
         });
 
         if (response.ok) {
-          const { user } = await response.json();
-          set({ user, isAuthenticated: true, loading: false });
+          const data = await response.json();
+          
+          set({ user: data, isAuthenticated: true,profileUpdated: data.profileUpdated, loading: false });
         } else {
           localStorage.removeItem("token");
           set({ user: null, isAuthenticated: false, loading: false });
@@ -50,12 +53,15 @@ const useStore = create((set) => ({
 
       const data = await response.json();
       set({ user: data.user, isAuthenticated: true, loading: false });
+      return {ok: true, data: data}
     } catch (err) {
       set({ loading: false, error: err.message });
+      return {ok: false,err: err.message}
     }
   },
 
   signIn: async ({ email, password }) => {
+    console.log("email: " + email , "password: " + password);
     set({ loading: true, error: null });
     try {
       const response = await fetch(baseUrl + "/api/auth/signin", {
@@ -69,11 +75,17 @@ const useStore = create((set) => ({
         throw new Error(data.message || "Login failed");
       }
 
-      const { token } = await response.json();
+      const data = await response.json();
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("email",email);
 
-      set({ user: { email }, isAuthenticated: true, loading: false });
+      set({
+        user: data ,
+        profileUpdated: data.profileUpdated,
+        isAuthenticated: true,
+        loading: false,
+      });
 
       return true;
     } catch (error) {
@@ -87,6 +99,7 @@ const useStore = create((set) => ({
     localStorage.removeItem("token");
     set({ user: null, isAuthenticated: false });
   },
-  
+
 }));
+
 export default useStore;

@@ -1,0 +1,383 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.main-dash-section{
+    width: 95vw;
+    height: 160vh;
+    background-color: rgba(76, 206, 76, 0.66);
+    display: flex;
+    overflow-x: hidden;
+}
+
+.main-left-section{
+    width:65vw;
+    height: 160vh;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.main-div-sec1{
+    width: 64.9vw;
+    height: 20vh;
+    background-color: white;
+    display: flex;
+}
+.main-div-text{
+    width: 34vw;
+    height: 20vh;
+    /* background-color: aquamarine; */
+}
+.dash-heading1{
+    font-size: 2.3rem;
+    margin-top: 4%;
+    margin-left: 4%;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+}
+
+.dash-para1{
+    font-size: 1rem;
+    margin-left: 5%;
+    font-family: "Poppins", serif;
+    letter-spacing: 2px;
+}
+.main-div-btn{
+    width: 34vw;
+    height: 20vh;
+    /* background-color: rgb(217, 35, 108); */
+}
+.create-group-btn{
+    width : 8vw;
+    height: 5vh;
+    background-color: green;
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 60%;
+    margin-top: 10%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.main-div-sec2{
+    width: 64.9vw;
+    height: 40vh;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: white;
+}
+
+.main-focus-div{
+    width: 32vw;
+    height: 40vh;
+    background-color: rgba(10, 138, 44, 0.708);
+    display: flex;
+    border-radius: 10px;
+    justify-content: space-evenly;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.main-total-group-div{
+    width: 15vw;
+    height: 35vh;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    margin-top: 3.5%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.main-inside-div{
+    width: 10vw;
+    height: 20vh;
+    background-color: rgba(109, 255, 109, 0.82);
+    display: flex;
+    border-radius: 10px;
+    margin-left: 17%;
+    margin-top: 10%;
+}
+.total-group-count{
+    font-size: 4rem;
+    margin-left: 34%;
+    margin-top: 15%;
+    font-weight: 500;
+    font-family: "Poppins", serif;
+}
+
+.main-total-group-div h2{
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: "Poppins", serif;
+    margin-top: 10%;
+    line-height: 2px;
+}
+.main-focus-hr-div{
+    width: 15vw;
+    height: 35vh;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    margin-top: 3.5%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.main-focus-hr-div h2{
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: "Poppins", serif;
+    margin-top: 10%;
+    line-height: 2px;
+}
+
+.create-focus-btn{
+    width: 10vw;
+    height: 5vh;
+    background-color: rgb(14, 144, 12);
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 5%;
+    margin-left: 15%;
+    padding-bottom: 2%;
+}
+
+.main-pichart-div{
+    width: 32vw;
+    height: 40vh;
+    background-color: rgba(65, 230, 56, 0.707);
+    display: flex;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.main-chart-div{
+    width: 18vw;
+    height: 35vh;
+    border-radius: 10px;
+    margin-top: 3.5%;
+}
+
+.main-chart-info-div
+{
+    width: 14vw;
+    height: 35vh;
+    border-radius: 10px;
+    margin-top: 3.5%;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(3,5vh); 
+    grid-gap: 10px;
+    padding-top: 10%;
+    margin-left: 3%;
+}
+
+.main-div-info{
+    width: 13vw;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.782);
+    border-radius: 5px;
+    margin-top: 3.5%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1rem;
+    font-family: "Poppins", serif;
+    margin-left: 3%;
+}
+
+.chart-img{
+    width: 15vw;
+    height: 15vw;
+    margin-left: 10%;
+    margin-top: 5%;
+}
+
+.main-div-sec3{
+    width: 63.9vw;
+    height: 83vh;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: white;
+    margin-left: 1%;
+    margin-top: 3%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+    display: flex;
+}
+
+.joined-group{
+    width: 32vw;
+    height: 75vh;
+    background-color: rgba(51, 229, 63, 0.719);
+    margin-top: 3%;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: repeat(2,1fr);
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.user-files{
+    width: 30vw;
+    height: 75vh;
+    background-color: rgba(18, 91, 26, 0.732);
+    margin-top: 3%;
+    border-radius: 5px;
+}
+
+.groups{
+    width: 15vw;
+    height: 20vh;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.user-info{
+    width: 6vw;
+    height: 18vh;
+    background-color: rgb(135, 135, 135);
+    margin-top: 3%;
+    border-radius: 5px;
+}
+.user-action{
+    width: 8vw;
+    height: 18vh;
+    margin-top: 3%;
+    border-radius: 5px;
+}
+.user-action h2{
+    font-size: 1rem;
+    margin-top: 10%;
+    font-family: "Poppins", serif;
+}
+
+.user-action p{
+    font-size: 0.8rem;
+    font-family: "Poppins", serif;
+}
+
+.join-btn{
+    width : 4vw;
+    height: 3vh;
+    background-color: rgb(15, 156, 55);
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 0%;
+    margin-top: 10%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.main-right-section{
+    width: 30vw;
+    height: 160vh;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.main-meeting-section{
+    width: 55vw;
+    height: 7vh;
+    /* background-color: rgba(44, 149, 47, 0.777); */
+    
+}
+
+.upcoming-btn,  .recent-btn{
+    width: 7vw;
+    height: 4vh;
+    background-color: rgb(6, 112, 22);
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 2%;
+    margin-top: 2%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.upcoming-btn:hover{
+    background-color: white;
+    color: rgb(6, 112, 22);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.recent-btn:hover{
+    background-color: white;
+    color: rgb(6, 112, 22);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.Meeting-info{
+    font-size: 1.5rem;
+    font-family: "Poppins", serif;
+    margin-top: 5%;
+    margin-left: 5%;
+    font-weight: 500;
+}
+.user-meeting{
+    height: 65vh;
+    width: 28vw;
+    background-color: rgba(35, 208, 41, 0.82);
+    margin-top: 3%;
+    margin-left: 4%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding-top: 1%;
+}
+
+.user-to-do{
+    height: 65vh;
+    width: 28vw;
+    background-color: rgba(35, 208, 41, 0.522);
+    margin-top: 3%;
+    margin-left: 4%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.meeting-card{
+    width: 27vw;
+    height: 19vh;
+    background-color: rgba(255, 255, 255, 0.782);
+    margin-top: 3%;
+    margin-left: 2%;
+    padding-top: 2%;
+    padding-left: 2%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    align-items: center;
+    font-size: 0.8rem;
+    font-family: "Poppins", serif;
+}
+.meeting-title{
+    font-weight: 500;
+    font-size: 1rem;
+}
+.meeting-join-btn{
+    width : 6vw;
+    height: 4vh;
+    background-color: rgb(15, 156, 55);
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 70%;
+    margin-top: -1%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.meeting-join-btn:hover{
+    background-color: white;
+    color: rgb(6, 112, 22);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}

@@ -1,0 +1,108 @@
+/* General container styling */
+.invitations-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9fdf9; /* Light greenish-white */
+    border: 1px solid #e0f2e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Title styling */
+.invitations-title {
+    text-align: center;
+    font-size: 24px;
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+/* Error message styling */
+.error {
+    color: #d32f2f; /* Red for errors */
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* Invitations list styling */
+.invitations-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.invitation-item {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.invitation-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Group name and description styling */
+.invitation-item strong {
+    color: #388e3c;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.invitation-item p {
+    color: #555;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Buttons styling */
+.invitation-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.invitation-button:hover {
+    background-color: #388e3c;
+}
+
+/* Reject button specific styles */
+.invitation-button.reject {
+    background-color: #d32f2f;
+}
+
+.invitation-button.reject:hover {
+    background-color: #b71c1c;
+}
+
+/* Loading text styling */
+.loading-text {
+    text-align: center;
+    color: #555;
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+/* No invitations text styling */
+.no-invitations {
+    text-align: center;
+    color: #777;
+    font-size: 16px;
+    margin-top: 20px;
+}

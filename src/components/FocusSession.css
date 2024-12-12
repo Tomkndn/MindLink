@@ -1,0 +1,109 @@
+/* FocusSession.css */
+
+.focus-timer-container {
+  font-family: 'Arial', sans-serif;
+  background-image: url('../assets/focus-background.png'); 
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  padding: 20px;
+  color: #ffffff; 
+  width: 100vw;
+  height:100vh;
+  margin: 0 auto;
+}
+
+.focus-timer-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.focus-timer-container .timer-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1vw; 
+  flex-wrap: wrap;
+}
+
+.focus-timer-container .timer-display > div {
+  font-size: clamp(5rem, 10vw, 10rem);
+  font-weight: bold;
+  color: #011b0664;
+  background-color: white;
+  margin: 1vw;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 35vh; 
+  width: 20vw; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+
+}
+
+@media (max-width: 768px) {
+  .focus-timer-container .timer-display > div {
+    height: 10vh;
+    width: 25vw;
+    font-size: clamp(2rem, 4vw, 6rem); 
+  }
+}
+
+.focus-timer-container .input-time {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  
+}
+
+.focus-timer-container .input-time input {
+  font-size: 1.2rem;
+  margin: 0 5px;
+  padding: 10px;
+  width: 80px;
+  text-align: center;
+  border: 2px solid #080808;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.focus-timer-container .input-time input:focus {
+  border-color: #0ff257;
+  box-shadow: 0 0 5px #070808;
+}
+
+.focus-timer-container button {
+  font-size: 1rem;
+  margin: 10px;
+  padding: 12px 20px;
+  color: #ffffff;
+  background-color: #06300d1f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.focus-timer-container button:hover {
+  background-color: #16962d7e;
+}
+
+.focus-timer-container button:active {
+  transform: scale(0.95);
+}
+
+
+.focus-timer-container div > button + button {
+  margin-left: 10px;
+}
+
+.focus-timer-container div {
+  text-align: center;
+}
