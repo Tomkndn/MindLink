@@ -8,15 +8,7 @@ const userRoutes = require('./routes/user.routes');
 const chatRoutes = require('./routes/chat.routes');
 const messageRoutes = require('./routes/message.routes')
 const { globalErrorHandler } = require('./middleware/error.middleware');
-const meetingRoutes = require('./routes/Meetings.js');
-const focusSessionRoutes = require('./routes/FocusSessionRoutes');
-const groupRoutes = require('./routes/GroupRoutes');
-
-const userRoutes = require('./routes/user.routes');
-const chatRoutes = require('./routes/chat.routes');
-const messageRoutes = require('./routes/message.routes')
-const { globalErrorHandler } = require('./middleware/error.middleware');
-const meetingRoutes = require('./routes/Meetings.js');
+const meetingRoutes = require('./routes/Meeting.js');
 const focusSessionRoutes = require('./routes/FocusSessionRoutes');
 const groupRoutes = require('./routes/GroupRoutes');
 const { Server } = require('socket.io');

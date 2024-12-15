@@ -12,6 +12,7 @@
     height: 160vh;
     background-color: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    position: relative;
 }
 
 .main-div-sec1{
@@ -42,7 +43,9 @@
 .main-div-btn{
     width: 34vw;
     height: 20vh;
+    display: flex;
     /* background-color: rgb(217, 35, 108); */
+    padding-top: 4%;
 }
 .create-group-btn{
     width : 8vw;
@@ -53,7 +56,22 @@
     font-size: 12px;
     border-radius: 5px;
     text-align: center;
-    margin-left: 60%;
+    margin-left: 80%;
+    margin-top: 10%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.create-group-btn2{
+    width : 8vw;
+    height: 5vh;
+    background-color: green;
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 85%;
     margin-top: 10%;
     font-family: "Poppins", serif;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -103,6 +121,14 @@
     font-family: "Poppins", serif;
 }
 
+.total-group-count2{
+    font-size: 4rem;
+    margin-left: 5%;
+    margin-top: 15%;
+    font-weight: 500;
+    font-family: "Poppins", serif;
+}
+
 .main-total-group-div h2{
     text-align: center;
     font-size: 1rem;
@@ -144,14 +170,13 @@
 .main-pichart-div{
     width: 32vw;
     height: 40vh;
-    background-color: rgba(65, 230, 56, 0.707);
-    display: flex;
+    background-color: rgb(252, 252, 252);
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .main-chart-div{
-    width: 18vw;
+    width: 31vw;
     height: 35vh;
     border-radius: 10px;
     margin-top: 3.5%;
@@ -192,6 +217,14 @@
     margin-top: 5%;
 }
 
+.main-div-sec3-heading{
+    font-size: 2rem;
+    word-spacing: 23rem;
+    margin-left: 3%;
+    margin-top: 1.5%;
+    font-weight: 500;
+    font-family: "Poppins", serif;
+}
 .main-div-sec3{
     width: 63.9vw;
     height: 83vh;
@@ -199,7 +232,7 @@
     justify-content: space-evenly;
     background-color: white;
     margin-left: 1%;
-    margin-top: 3%;
+    margin-top: 1%;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 10px;
     display: flex;
@@ -225,8 +258,44 @@
     background-color: rgba(18, 91, 26, 0.732);
     margin-top: 3%;
     border-radius: 5px;
+    display: grid;
+    grid-template-rows: repeat(6,1fr);
+    grid-template-columns: repeat(0);
 }
 
+.invite-card{
+    width: 28vw;
+    height: 15vh;
+    background-color: white;
+    border-radius: 5px;
+    color: black;
+    margin-left: 3%;
+    margin-top: 3%;
+    padding-left: 3%;
+    padding-top: 2%;
+}
+
+.invite-button{
+    width: 7vw;
+    height: 4vh;
+    background-color: rgb(10, 138, 44);
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 2%;
+    font-size: 0.8rem;
+    margin-left: 1%;
+}
+.invite-h2{
+    font-size: 1rem;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+}
+.invite-msg{
+    font-size: 0.8rem;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+}
 .groups{
     width: 15vw;
     height: 20vh;
@@ -331,6 +400,8 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding-top: 1%;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .user-to-do{
@@ -344,7 +415,7 @@
 }
 
 .meeting-card{
-    width: 27vw;
+    width: 26vw;
     height: 19vh;
     background-color: rgba(255, 255, 255, 0.782);
     margin-top: 3%;
@@ -361,6 +432,10 @@
     font-weight: 500;
     font-size: 1rem;
 }
+
+.meeting-btn-div{
+    display: flex;
+}
 .meeting-join-btn{
     width : 6vw;
     height: 4vh;
@@ -370,14 +445,84 @@
     font-size: 12px;
     border-radius: 5px;
     text-align: center;
-    margin-left: 70%;
-    margin-top: -1%;
+    margin-left: 2%;
     font-family: "Poppins", serif;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-
+.meeting-join-btn1{
+    width : 6vw;
+    height: 4vh;
+    background-color: rgb(15, 156, 55);
+    color: white;
+    border: none;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: center;
+    margin-left: 2%;
+    font-family: "Poppins", serif;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
 .meeting-join-btn:hover{
     background-color: white;
     color: rgb(6, 112, 22);
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+.meeting-join-btn1:hover{
+    background-color: white;
+    color: rgb(6, 112, 22);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+.invite-label{
+    margin-left: 4%;
+    font-size: 1rem;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+}
+
+.invite-email{
+    margin-left: 4%;
+    border: none;
+    outline: 1px solid black;
+    border-radius: 5px;
+    width: 27vw;
+}
+
+.invite-popup{
+    width: 30vw;
+    height: 30vh;
+    padding-top: 2%;
+    color : black;
+    /* border: 1px solid black; */
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    position: absolute;
+    top: 35%;
+    left: 37%;
+}
+.cross-image{
+    width: 1.5vw;
+    height: 1.5vw;
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    cursor: pointer;
+}
+.invite-sent-btn{
+    width: 7vw;
+    height: 5vh;
+    background-color: green;
+    color : white;
+    font-weight: 400;
+    border: none;
+    border-radius: 5px;
+    margin-left: 37%;
+    margin-top: 5%;
+}
+
+.invite-sent-btn:hover{
+    background-color: rgba(77, 183, 24, 0.819);
+    color: white;
+    /* border: 1px solid black; */
 }

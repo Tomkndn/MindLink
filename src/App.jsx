@@ -19,6 +19,7 @@ import CreateGroup from './components/CreateGroup'
 import InviteUser from './components/InviteUser';
 import Invitations from './components/Invitations';  
 import GroupChat from './Pages/GroupChat';
+import FocusSessionChart from './components/FocusSessionChart';
 
 function App() {
   const { initializeAuth, loading } = useStore();
@@ -142,6 +143,17 @@ function App() {
             <ProtectedRoute>
               <RedirectToProfile>
                 <Meeting />
+              </RedirectToProfile>
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/chart"
+          element={
+            <ProtectedRoute>
+              <RedirectToProfile>
+                <FocusSessionChart />
               </RedirectToProfile>
             </ProtectedRoute>
           }

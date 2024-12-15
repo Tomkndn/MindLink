@@ -40,7 +40,7 @@ const signin = async (req, res) => {
 
     const userData = user.toObject();
     delete userData.password;
-
+    
     res.status(200).json({ token,id: user._id, username: user.username,profileUpdated: user.profileUpdated });
   } catch (err) {
     res.status(500).json({ error: "Server error during login" });
@@ -63,7 +63,7 @@ const verify = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    
     return res.json({ valid: true, id: user._id, username: user.username,profileUpdated: user.profileUpdated });
   });
 };

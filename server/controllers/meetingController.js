@@ -1,5 +1,6 @@
 const Meeting = require('../models/Meetingmodel')
 const User = require('../models/User.model')
+const MeetInvites = require('../models/MeetingInviteModel')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose');
 module.exports.HandleTocreateAGroup=async(req,res)=>{
@@ -37,27 +38,37 @@ module.exports.HandleTocreateAGroup=async(req,res)=>{
     }
 }
 
-module.exports.HandleToInvitePeople = async (req,res) =>{
-    try{
-        const {email , meetingname} = req.body;
-        if(!email ||!meetingname){
-            return res.status(400).json({error: 'All fields are required'});
+module.exports.HandleToInvitePeople = async (req, res) => {
+    try {
+        const { email, meetingId } = req.body;
+        console.log("Received request with email:", email, "and meetingId:", meetingId);
+
+        if (!email || !meetingId) {
+            console.log('Missing email or meetingId');
+            return res.status(400).json({ error: 'All fields are required' });
         }
 
-        const meeting = await Meeting.findOne({title: meetingname});
-        const user = await User.findOne({email});
-        if(!meeting)
-        {
-            return res.status(404).json({error: 'Meeting not found'});
+        const meeting = await Meeting.findById(meetingId);
+        const user = await User.findOne({ email });
+
+        if (!meeting) {
+            console.log('No meeting found');
+            return res.status(404).json({ error: 'Meeting not found' });
         }
-        if(!user)
-        {
-            return res.status(404).json({error: 'User not found'});
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).json({ error: 'User not found' });
         }
+
         const userId = user.id;
+        
+        console.log('Participants:', meeting.participants);
+
         const existingParticipant = meeting.participants.find(
-            (participant) => participant.username.toString() === userId
+            (participant) => participant.userId && participant.userId.toString() === userId
         );
+
+        console.log('Existing participant:', existingParticipant);
 
         if (existingParticipant) {
             if (existingParticipant.invited) {
@@ -68,52 +79,63 @@ module.exports.HandleToInvitePeople = async (req,res) =>{
         }
 
         meeting.participants.push({
-            username: userId,
+            userId, 
             invited: true,
         });
-        
-        await meeting.save();
 
-        if(meeting.privacy == 'private') {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
-        let password = '';
-        
-        for (let i = 0; i < 6; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            password += characters[randomIndex];
-        }
-        meeting.password = password;
         await meeting.save();
-    }
+        console.log('Meeting updated:', meeting);
+
+        if (meeting.privacy === 'private') {
+            console.log('Generating password for private meeting');
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+            let password = '';
+
+            for (let i = 0; i < 6; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                password += characters[randomIndex];
+            }
+            meeting.password = password;
+            await meeting.save();
+            console.log('Password generated:', password);
+        }
 
         res.status(200).json({
             message: 'User invited successfully',
             meetingId: meeting._id,
             participant: user.username,
-            password: meeting.password,
+            password: meeting.password, 
         });
-        
-    }catch(err)
-    {
-        res.status(500).json({error: 'Server error during group invite'});
+
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({ error: 'Server error during group invite' });
     }
-}
+};
+
+
+
 // '/meetings/:meetingId/join',
 module.exports.HandleToJoinMeeting = async (req, res) => {
     try {
-        const { userId } = req.user.id; // Assuming userId is sent in the request body
-        const meetingId = req.params.id; // Meeting ID from the URL parameters
-        console.log()
-        // Find the meeting by ID
+        const userId = req.user.id; 
+        const meetingId = req.params.id; 
+        console.log(userId)
+       
         const meeting = await Meeting.findById(meetingId);
 
         if (!meeting) {
+            console.log("meeting not found");
             return res.status(404).json({ message: 'Meeting not found' });
         }
 
-        // Check if the meeting is public
+        const currentTime = new Date();
+        if (currentTime > meeting.date) {
+            return res.status(400).json({ message: 'Meeting has expired' });
+        }
+
         if (meeting.isPublic) {
-            // If it's a public meeting, add the user directly to the attendees list
+           
             if (!meeting.attendees.includes(userId)) {
                 meeting.attendees.push(userId);
                 await meeting.save();
@@ -124,11 +146,11 @@ module.exports.HandleToJoinMeeting = async (req, res) => {
             }
             
         } else {
-            // For private meetings, check if the user is invited
+            
             const existingParticipant = meeting.participants.find(participant => participant.userId.toString() === userId);
             
             if (existingParticipant && existingParticipant.invited) {
-                // If the user is invited, add them to the attendees list
+                
                 if (!meeting.attendees.includes(userId)) {
                     meeting.attendees.push(userId);
                     await meeting.save();
@@ -137,7 +159,7 @@ module.exports.HandleToJoinMeeting = async (req, res) => {
                     return res.status(400).json({ message: 'User has already joined the meeting' });
                 }
             } else {
-                // If the user is not invited to the private meeting
+                
                 return res.status(400).json({ message: 'User is not invited to the meeting' });
             }
         }
@@ -146,7 +168,7 @@ module.exports.HandleToJoinMeeting = async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 };
-//'/user/:userId/meetings/created'
+
 module.exports.HandleToGetAllMeetings = async (req, res) => {
     const userId = req.user.id; 
     try {
@@ -167,35 +189,40 @@ module.exports.HandleToGetAllMeetings = async (req, res) => {
     }
 }
 
-// '/recentmeetings'
+
 module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
     try {
       const currentDate = new Date();
       const userId = req.user.id; 
-      console.log(userId)
+  
+      
       const upcomingMeetings = await Meeting.find({
+        $or: [
+          { organizer: userId }, 
+          { 'participants.username': userId }, 
+        ],
         date: { $gte: currentDate }, 
         status: { $in: ['scheduled', 'completed'] }, 
       })
         .sort({ date: 1 }) 
         .populate('organizer', 'username') 
         .populate('participants.username', 'username') 
-        .populate('attendees', 'username');
-
-      console.log(upcomingMeetings)
-      res.status(200).json(upcomingMeetings);
+        .populate('attendees', 'username'); 
+  
+      res.status(200).json(upcomingMeetings); 
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'An error occurred while fetching upcoming meetings' });
     }
   };
+  
 
   module.exports.HandleToGetRecentMeetings = async (req, res) => {
     try {
       const currentDate = new Date();
       const userId = req.user.id; 
         console.log(userId)
-      // Find all completed meetings where the user is the organizer and the date is in the past.
+      
       
       const recentMeetings = await Meeting.find({
         date: { $lt: currentDate },
@@ -207,8 +234,7 @@ module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
         .populate('participants.username', 'username')
         .populate('attendees', 'username');
       
-        console.log(recentMeetings)
-      // Respond with the list of recent meetings
+      
       res.status(200).json(recentMeetings);
     } catch (error) {
       console.error(error);
@@ -219,28 +245,68 @@ module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
 
 module.exports.getMeetingById = async (req, res) => {
     try {
-    //   const meetingId = req.params.id; // Get meeting ID from the URL params
-      const meetingId = req.params.id.trim(); // Trim any leading or trailing spaces
-      console.log('Meeting ID from params:', meetingId); // Log the ID
-      // Check if the meetingId is a valid ObjectId
+   
+      const meetingId = req.params.id.trim(); 
+      console.log('Meeting ID from params:', meetingId);
+     
       if (!mongoose.Types.ObjectId.isValid(meetingId)) {
         return res.status(400).json({ message: 'Invalid meeting ID format' });
       }
   
-      // Find the meeting by ID
+     
       const meeting = await Meeting.findById(meetingId);
   
       if (!meeting) {
-        // If no meeting is found with the given ID, return a 404 response
+        
         return res.status(404).json({ message: 'Meeting not found' });
       }
   
-      // Return the found meeting in the response
+      
       res.json(meeting);
   
     } catch (error) {
-      // Catch any other errors and send a 500 internal server error response
+      
       console.error('Error fetching meeting:', error);
       res.status(500).json({ message: 'Server Error' });
     }
   };
+
+  module.exports.register = async (req, res) => {
+    try {
+      const { meetingId } = req.params; 
+      const userId = req.user.id; 
+    
+      
+      const meeting = await Meeting.findById(meetingId);
+      if (!meeting) {
+        return res.status(404).json({ message: 'Meeting not found' });
+      }
+  
+      
+      if (meeting.organizer.toString() === userId) {
+        return res.status(403).json({ message: 'You cannot register for your own meeting' });
+      }
+  
+      
+      const existingParticipant = meeting.participants.find(participant => participant.userId.toString() === userId);
+  
+      if (existingParticipant) {
+        return res.status(400).json({ message: 'User has already registered for the meeting' });
+      }
+    
+      
+      meeting.participants.push({
+        userId,
+        invited: true, 
+      });
+    
+     
+      await meeting.save();
+    
+      return res.status(200).json({ message: 'Successfully registered for the meeting' });
+    } catch (err) {
+      console.error('Error registering user:', err);
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  };
+  

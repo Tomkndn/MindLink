@@ -1,30 +1,46 @@
-import React, { useState } from 'react';
-import "../Todo.css"
+import React, { useState, useEffect } from 'react';
+import "../Todo.css";
+
 const Todo = () => {
+  // Load tasks from local storage (if available)
+  const loadTasksFromLocalStorage = () => {
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  };
+
   // State to manage the list of tasks
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(loadTasksFromLocalStorage);
   const [newTask, setNewTask] = useState('');
 
   // Function to handle adding a new task
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+      const newTasks = [
+        ...tasks,
+        { id: Date.now(), text: newTask, completed: false }
+      ];
+      setTasks(newTasks);
+      localStorage.setItem('tasks', JSON.stringify(newTasks));  // Save to localStorage
       setNewTask('');
     }
   };
 
   // Function to handle toggling the completion status of a task
   const toggleTaskCompletion = (taskId) => {
-    setTasks(tasks.map(task =>
+    const updatedTasks = tasks.map(task =>
       task.id === taskId
         ? { ...task, completed: !task.completed }
         : task
-    ));
+    );
+    setTasks(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));  // Save to localStorage
   };
 
   // Function to handle deleting a task
   const deleteTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(updatedTasks);
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));  // Save to localStorage
   };
 
   return (
@@ -43,34 +59,34 @@ const Todo = () => {
 
       {/* List of tasks */}
       <div className="task-list">
-  {tasks.map((task) => (
-    <div key={task.id} className="task-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-      <div
-        onClick={() => toggleTaskCompletion(task.id)}
-        style={{
-          textDecoration: task.completed ? 'line-through' : 'none',
-          cursor: 'pointer',
-          flexGrow: 1,
-        }}
-      >
-        {task.text}
+        {tasks.map((task) => (
+          <div key={task.id} className="task-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div
+              onClick={() => toggleTaskCompletion(task.id)}
+              style={{
+                textDecoration: task.completed ? 'line-through' : 'none',
+                cursor: 'pointer',
+                flexGrow: 1,
+              }}
+            >
+              {task.text}
+            </div>
+            <button
+              className="task-delete-button"
+              onClick={() => deleteTask(task.id)}
+              style={{
+                backgroundColor: 'red',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                cursor: 'pointer',
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
       </div>
-      <button
-      className="task-delete-button"
-        onClick={() => deleteTask(task.id)}
-        style={{
-          backgroundColor: 'red',
-          color: 'white',
-          border: 'none',
-          padding: '5px 10px',
-          cursor: 'pointer',
-        }}
-      >
-        Delete
-      </button>
-    </div>
-  ))}
-</div>
     </div>
   );
 }
