@@ -1,0 +1,83 @@
+.task-list {
+padding: 0;
+margin: 0;
+max-width: 400px;
+height: 53vh;
+margin-left: 3%;
+margin-top: 3%;
+background-color: #ffffff;
+border-radius: 10px;
+padding-top: 2%;
+padding-left: 2%;
+box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+input {
+padding: 10px;
+font-size: 16px;
+width: 70%;
+margin-right: 10px;
+outline: none;
+border-radius: 5px;
+margin-top: 3%;
+margin-left: 3%;
+box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+.add-task-btn{
+padding: 10px;
+font-size: 16px;
+cursor: pointer;
+background-color: rgb(30, 114, 30);
+color: white;
+width: 6vw;
+border-radius: 5px;
+}
+
+ul {
+list-style-type: none;
+padding: 0;
+}
+
+/* li {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background-color: white;
+border-radius: 5px;
+padding-left: 2%;
+width: 25vw;
+margin-top: 3%;
+} */
+
+span {
+cursor: pointer;
+}
+
+.task-item {
+width: 25vw;
+display: flex;
+justify-content: space-between;
+background-color: white;
+align-items: center;
+margin-bottom: 10px;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 5px;
+height: 7vh;
+box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.task-item div {
+flex-grow: 1;
+cursor: pointer;
+}
+  
+.task-delete-button {
+background-color: red;
+color: white;
+border: none;
+padding: 5px 10px;
+cursor: pointer;
+}
+
