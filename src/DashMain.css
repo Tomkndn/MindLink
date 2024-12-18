@@ -46,6 +46,7 @@
     display: flex;
     /* background-color: rgb(217, 35, 108); */
     padding-top: 4%;
+    margin-left: 30%;
 }
 .create-group-btn{
     width : 8vw;
@@ -56,7 +57,7 @@
     font-size: 12px;
     border-radius: 5px;
     text-align: center;
-    margin-left: 80%;
+    /* margin-left: 80%; */
     margin-top: 10%;
     font-family: "Poppins", serif;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -71,7 +72,7 @@
     font-size: 12px;
     border-radius: 5px;
     text-align: center;
-    margin-left: 85%;
+    margin-left: 5%;
     margin-top: 10%;
     font-family: "Poppins", serif;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -246,7 +247,8 @@
     border-radius: 5px;
     display: grid;
     grid-template-columns: repeat(2,1fr);
-    grid-template-rows: repeat(2,1fr);
+    grid-template-rows: repeat(2,20vh);
+    gap: 10px;
     padding-left: 1%;
     padding-top: 1%;
     padding-bottom: 1%;
@@ -525,4 +527,59 @@
     background-color: rgba(77, 183, 24, 0.819);
     color: white;
     /* border: 1px solid black; */
+}
+
+.no-invites-image{
+    width: 30vh;
+    height: 30vh;
+    margin-left: 25%;
+    margin-top: 30%;
+    opacity: 80%;
+}
+.no-invite-msg{
+    font-size: 1rem;
+    font-family: "Poppins", serif;
+    margin-left: 17%;
+    margin-top: 2%;
+    padding-left: 4%;
+    color: white;
+    font-weight: 500;
+    background-color: rgb(20, 228, 159);
+    width: 20vw;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.meeting-img{
+    width: 10vw;
+    height: 10vw;
+    margin-left: 33%;
+    margin-top: 30%;
+    border-radius: 50%;
+    opacity: 80%;
+}
+
+.meeting-msg{
+    font-size: 1rem;
+    font-family: "Poppins", serif;
+    margin-left: 23%;
+    margin-top: 3%;
+    padding-left: 6%;
+    color: white;
+    font-weight: 500;
+    background-color: rgb(20, 228, 159);
+    width: 15vw;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.meeting-delete-btn{
+    width: 2vw;
+    height: 4vh;
+    margin-left: 90%;
+    margin-top: -8%;
+}
+
+.meeting-delete-btn:hover{
+    cursor: pointer;
 }

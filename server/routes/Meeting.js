@@ -4,7 +4,7 @@ const {authenticateToken} = require('../middleware/auth.middleware')
 const {HandleTocreateAGroup,HandleToInvitePeople,
     HandleToGetAllMeetings,HandleToGetUpcomingMeetings,
     HandleToGetRecentMeetings,HandleToJoinMeeting,
-    HandleToGetMeetingById,getMeetingById,register} = require('../controllers/meetingController')
+    HandleToGetMeetingById,getMeetingById,register,HandleToDeleteMeeting} = require('../controllers/meetingController')
 const inviteController = require('../controllers/MeetingInvitesController');
 
 router.post('/meet',authenticateToken,HandleTocreateAGroup);
@@ -17,6 +17,7 @@ router.patch('/updateinvite/:inviteId',authenticateToken,inviteController.update
 router.get('/allmeetings',authenticateToken,HandleToGetAllMeetings);
 router.get('/upcomingmeetings',authenticateToken,HandleToGetUpcomingMeetings);
 router.get('/recentmeetings',authenticateToken,HandleToGetRecentMeetings);
+router.delete('/delete/:meetingid',authenticateToken,HandleToDeleteMeeting)
 module.exports = router;
 
 

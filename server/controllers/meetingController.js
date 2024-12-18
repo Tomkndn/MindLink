@@ -40,6 +40,9 @@ module.exports.HandleTocreateAGroup=async(req,res)=>{
 
 module.exports.HandleToInvitePeople = async (req, res) => {
     try {
+
+      const currentuserid = req.user.id;
+
         const { email, meetingId } = req.body;
         console.log("Received request with email:", email, "and meetingId:", meetingId);
 
@@ -55,6 +58,13 @@ module.exports.HandleToInvitePeople = async (req, res) => {
             console.log('No meeting found');
             return res.status(404).json({ error: 'Meeting not found' });
         }
+
+        if(currentuserid != meeting.organizer)
+        {
+          console.log('Only the organizer can invite others');
+            return res.status(403).json({ message: 'Only the meeting organizer can invite others' });
+        }
+
         if (!user) {
             console.log('User not found');
             return res.status(404).json({ error: 'User not found' });
@@ -79,7 +89,7 @@ module.exports.HandleToInvitePeople = async (req, res) => {
         }
 
         meeting.participants.push({
-            userId, 
+            username : userId, 
             invited: true,
         });
 
@@ -209,6 +219,7 @@ module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
         .populate('participants.username', 'username') 
         .populate('attendees', 'username'); 
   
+      // console.log("upcomming meetings : "+upcomingMeetings)
       res.status(200).json(upcomingMeetings); 
     } catch (error) {
       console.error(error);
@@ -310,3 +321,23 @@ module.exports.getMeetingById = async (req, res) => {
     }
   };
   
+module.exports.HandleToDeleteMeeting = async (req, res) =>{
+  try{
+    const meetingId = req.params.meetingid;
+    const userId = req.user.id;
+ 
+    const meeting = await Meeting.findById(meetingId);
+    if(!meeting){
+      return res.status(404).json({ message: 'Meeting not found' });
+    }
+
+    if(meeting.organizer.toString()!== userId){
+      return res.status(403).json({ message: 'You are not authorized to delete this meeting' });
+    }
+    await Meeting.findOneAndDelete({_id: meetingId});
+    res.status(200).json({ message: 'Meeting deleted successfully' });
+  }catch(err){
+    console.error('Error deleting meeting:', err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
