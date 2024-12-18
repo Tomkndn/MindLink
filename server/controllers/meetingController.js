@@ -59,12 +59,6 @@ module.exports.HandleToInvitePeople = async (req, res) => {
             return res.status(404).json({ error: 'Meeting not found' });
         }
 
-        if(currentuserid != meeting.organizer)
-        {
-          console.log('Only the organizer can invite others');
-            return res.status(403).json({ message: 'Only the meeting organizer can invite others' });
-        }
-
         if (!user) {
             console.log('User not found');
             return res.status(404).json({ error: 'User not found' });
@@ -219,7 +213,7 @@ module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
         .populate('participants.username', 'username') 
         .populate('attendees', 'username'); 
   
-      // console.log("upcomming meetings : "+upcomingMeetings)
+      console.log("upcomming meetings : "+upcomingMeetings)
       res.status(200).json(upcomingMeetings); 
     } catch (error) {
       console.error(error);

@@ -1,84 +1,120 @@
+/* CreateGroup.css */
 
-.create-group-form {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9fdf9;
-    border: 1px solid #e0f2e0;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
+/* Make sure the form container fills the entire viewport */
+.create-group-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    height: 100vh;  /* Full viewport height */
+    margin: 0;
+    background-color: #f4f7fb;  /* Light background color */
 }
 
+/* Form styling */
+.create-group-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 37%;
+    width: 90%; /* Ensure it adjusts to the container */
+    max-width: 400px; /* Limit maximum width */
+    padding: 30px;
+    margin-top: 10%;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;  /* Animation for form appearance */
+}
+
+/* Header styling */
 .create-group-form h2 {
     text-align: center;
-    font-size: 24px;
-    color: #2e7d32;
     margin-bottom: 20px;
+    font-size: 26px;
+    color: #333;
+    font-weight: 600;
+    letter-spacing: 1px;
+    animation: fadeIn 1s ease-out;  /* Fade-in animation for the header */
 }
 
-.create-group-form input[type="text"],
+/* Input fields and buttons */
+.create-group-form input,
 .create-group-form textarea,
-.create-group-form select {
+.create-group-form select,
+.create-group-form button {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    background-color: #ffffff;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     font-size: 16px;
-    color: #555;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s;
+    color: #333;
+    transition: all 0.3s ease-in-out;
 }
 
-.create-group-form input[type="text"]:focus,
+/* Focus effects for input fields */
+.create-group-form input:focus,
 .create-group-form textarea:focus,
 .create-group-form select:focus {
-    border-color: #4caf50;
     outline: none;
-}
-.create-group-form label {
-    display: inline-block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: #388e3c;
-    cursor: pointer;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
 }
 
-.create-group-form label input[type="checkbox"] {
-    margin-right: 8px;
-}
-
+/* Button styles */
 .create-group-form button {
-    display: block;
-    width: 100%;
-    padding: 10px 15px;
-    background-color: #4caf50;
+    background-color: #4CAF50;
     color: white;
-    font-size: 18px;
     font-weight: bold;
-    border: none;
-    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: all 0.3s ease;
+    padding: 12px;
 }
 
 .create-group-form button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);  /* Slight scaling on hover */
+}
+
+.create-group-form button:active {
     background-color: #388e3c;
-    transform: scale(1.02);
+    transform: scale(1);
 }
 
-.create-group-form:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.create-group-form textarea {
+    height: 120px;
+    resize: none;
 }
 
-@media (max-width: 768px) {
-    .create-group-form {
-        padding: 15px;
+.create-group-form select {
+    cursor: pointer;
+}
+
+/* Disabled button styling */
+.create-group-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Animation for the form appearance (slide up) */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-    .create-group-form button {
-        font-size: 16px;
+/* Fade-in effect for the form header */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './CreateGroup.css';
-
+import {Link} from 'react-router-dom'
 // API setup
 const API = axios.create({
     baseURL: 'http://localhost:5000/api/group',
@@ -37,6 +37,7 @@ const CreateGroup = () => {
             });
 
             alert('Group created successfully!');
+            window.location.href = '/dashboard';
             setForm({
                 name: '',
                 description: '',

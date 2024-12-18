@@ -28,6 +28,11 @@ const DashMain = () => {
   const [invitations, setInvitations] = useState([]);
   const [error, setError] = useState('');
   const [DeleteMeetId,setDeleteMeet] = useState(null);
+  const [attend,setattend] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Controls the visibility of the modal
+  const [email2, setEmail2] = useState(''); // Store the email address
+  const [groupid, setgroupid] = useState(' '); 
+  const [selectedGroup, setSelectedGroup] = useState(null);
   // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -114,7 +119,7 @@ const DashMain = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
-          const limitedGroups = response.data.slice(0, 6);
+          const limitedGroups = response.data;
           setgroups(limitedGroups);
         }
       } catch (err) {
@@ -443,23 +448,106 @@ const handleReject = async (groupId) => {
       }
     }
   };
-  // Trigger the effect when DeleteMeetId changes
-  const isMeetingTimeNow = (meetingDate, meetingTime) => {
-    // Combine the meeting date and time into a single Date object
-    const [hour, minute] = meetingTime.split(':').map(num => parseInt(num)); // Parse the time (e.g., '13:36')
-    const meetingDateTime = new Date(meetingDate); // Create Date object from meeting date
-    meetingDateTime.setHours(hour, minute, 0, 0); // Set the time from the meetingTime (hour and minute)
 
-    // Get the current time
-    const currentDateTime = new Date(); // This gets the current date and time
+  const isMeetingTimeNow = (meetingname, meetingDate, meetingTime) => {
 
-    // Allow a small window to check if the current time is within a few seconds of the meeting time
-    const timeDifference = Math.abs(meetingDateTime - currentDateTime);
-    const isTimeNow = timeDifference <= 5000; // 5 seconds tolerance for exact match
+    const [hour, minute] = meetingTime.split(':').map(num => parseInt(num));
 
-    return isTimeNow; // Returns true if the current time is within a few seconds of the meeting time
+    const meetingDateTime = new Date(meetingDate);
+    meetingDateTime.setHours(hour, minute, 0, 0); 
+
+    const currentDateTime = new Date(); 
+
+    const sameDay = meetingDateTime.toDateString() === currentDateTime.toDateString();
+    
+    const thirtyMinutesInMillis = 30 * 60 * 1000;
+
+    const meetingStartTime = meetingDateTime.getTime(); 
+    const currentTime = currentDateTime.getTime(); 
+
+    const isWithinTimeRange = currentTime >= meetingStartTime &&
+                              currentTime <= (meetingStartTime + thirtyMinutesInMillis);
+
+    console.log("Meeting Time: ", meetingDateTime, "Current Time: ", currentDateTime, "Is within time range? ", isWithinTimeRange);
+
+
+    return isWithinTimeRange && sameDay;
+};
+
+
+
+  
+  const handleJoinMeeting = async (meetingid) => {
+    try {
+      const token = localStorage.getItem('token');
+      const roomcode = "myLink1"
+      window.location.href = `http://localhost:5173/room/${roomcode}`;
+      if(!attend){
+        const response = await axios.post(
+            `http://localhost:5000/api/meeting/joinmeeting/${meetingid}`, 
+            {}, 
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if(response.status === 200){
+          alert('Meeting joined successfully');
+          setattend(true);
+        }
+      }
+    } catch (err) {
+      alert("Error joining meeting: " + err);
+      console.error("Error joining meeting: " + err);
+    }
+  };
+  const formatTimeWithAMPM = (time) => {
+    // Split the time into hours and minutes
+    const [hours, minutes] = time.split(':').map(num => parseInt(num));
+    
+    // Create a new Date object for the time
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0); // Set seconds to 0 for precise formatting
+  
+    // Format the time with AM/PM
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
   };
 
+  const handleInviteClick2 = (groupid,groupname) => {
+    setgroupid(groupid);  // Store the selected group
+    setSelectedGroup(groupname);  // Store the selected group name
+    setShowModal(true); // Show the modal
+  };
+
+  const handleSendInvite2 = async () => {
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+          `http://localhost:5000/api/group/${groupid}/invite`, 
+          { invitedUserEmail: email2 }, 
+          {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+      if(response.status === 200){
+        alert('Invite sent successfully');
+        setShowModal(false); 
+      }
+    }catch(err){
+      console.error("Error sending invite: " + err);
+      alert("Failed to send invite");
+    }
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <>
       <div className='main-dash-section'>
@@ -514,7 +602,7 @@ const handleReject = async (groupId) => {
                     {group.description.length > 15 ? group.description.substring(0, 13) + '...' : group.description}
                     </p>
                     <p>Members: {group.members.length}</p>
-                    <button className="join-btn">Open</button>
+                    <button className="join-btn" onClick={() => handleInviteClick2(group._id,group.title)}>invite</button>
                   </div>
                 </div>
               ))}
@@ -596,14 +684,14 @@ const handleReject = async (groupId) => {
                 {MeetingData.map((meeting) => (
                   <div key={meeting._id} className="meeting-card">
                     <h3 className='meeting-title'>{meeting.title}</h3>
-                    <p><strong>Date:</strong> {new Date(meeting.date).toLocaleString()}</p>
+                    <p><strong>Date:</strong> {new Date(meeting.date).toLocaleDateString('en-GB')} ,<strong>Time:</strong> {formatTimeWithAMPM(meeting.time)}</p>
                     <p><strong>Description:</strong> {meeting.description}</p>
                     <p><strong>Status:</strong> {meeting.privacy}</p>
                     <div className='meeting-btn-div'>
-                    {status === 'upcoming' && meeting.privacy === 'public' && isMeetingTimeNow(meeting.date, meeting.time) && (
-                      <button className='meeting-join-btn' onClick={() => handleRegisterClick(meeting._id)}>Join</button>
+                    {status === 'upcoming' && meeting.privacy === 'public' && isMeetingTimeNow(meeting.title, meeting.date, meeting.time) && (
+                      <button className='meeting-join-btn' onClick={() => handleJoinMeeting(meeting._id)}>Join</button>
                     )}
-                      {status === 'upcoming' && meeting.privacy==='public' && !isMeetingTimeNow(meeting.date, meeting.time) && (
+                      {status === 'upcoming' && meeting.privacy==='public' && !isMeetingTimeNow(meeting.title , meeting.date, meeting.time) && (
                         <button className='meeting-join-btn1' onClick={() => handleInviteClick(meeting._id)}>Register</button>
                       )}
                       {status === 'upcoming' &&(
@@ -637,6 +725,23 @@ const handleReject = async (groupId) => {
               {message && <p>{message}</p>}
             </div>
           )}
+          {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Invite to {selectedGroup?.name}</h3>
+            <input
+              type="email"
+              value={email2}
+              onChange={(e) => setEmail2(e.target.value)}
+              placeholder="Enter email"
+              required
+            />
+            <button onClick={handleSendInvite2}>Send</button>
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
+          
           <h1 className='Meeting-info'>To-do</h1>
           <div className='user-to-do'>
             <Todo />
