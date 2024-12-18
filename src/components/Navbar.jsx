@@ -18,7 +18,7 @@ function Navbar() {
         <div className="text-2xl font-bold">Mind Link</div>
 
         {/* Navbar Links */}
-        <ul className="flex space-x-8 list-none m-0 p-0">
+        {/* <ul className="flex space-x-8 list-none m-0 p-0">
           <li>
             <a
               href="#about"
@@ -51,7 +51,7 @@ function Navbar() {
               Meetings
             </a>
           </li>
-        </ul>
+        </ul> */}
 
         {/* Signup Button */}
         {

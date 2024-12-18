@@ -238,7 +238,7 @@ function NotFound() {
 }
 
 const Redirect = ({ children }) => {
-  const { isAuthenticated, loading, profileUpdated } = useStore();
+  const { isAuthenticated, loading } = useStore();
   const location = useLocation();
 
   if (loading) return <LoadingPage />;

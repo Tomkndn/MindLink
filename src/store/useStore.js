@@ -93,6 +93,10 @@ signIn: async ({ email, password }) => {
     }
   },
 
+  updateProfile: async () => {
+    set({ profileUpdated: true});
+  },
+
   logout: () => {
     localStorage.removeItem("token");
     set({ user: null, isAuthenticated: false });
