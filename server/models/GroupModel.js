@@ -11,8 +11,7 @@ const GroupSchema = new mongoose.Schema({
         required: true 
     },
     admin: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', 
+        type: String, 
         required: true 
     },
     privacy: {
@@ -36,7 +35,7 @@ const GroupSchema = new mongoose.Schema({
             },
             role: {
                 type: String,
-                enum: ['member', 'moderator'], 
+                enum: ['member', 'admin'], 
                 default: 'member'
             },
             invited: {

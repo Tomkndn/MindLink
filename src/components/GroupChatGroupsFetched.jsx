@@ -10,9 +10,9 @@ const Groupfetched = ({ onSelectGroup }) => {
         const fetchGroups = async () => {
             try {
                 const userEmail = localStorage.getItem('email');
-                const token = localStorage.getItem('token'); // Fetch the token from localStorage
+                const token = localStorage.getItem('token'); 
                 
-                // Ensure both email and token are available
+              
                 if (!userEmail || !token) {
                     setError('Authentication required.');
                     setLoading(false);
@@ -24,7 +24,7 @@ const Groupfetched = ({ onSelectGroup }) => {
                     { userEmail },
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`, // Include the token in the headers
+                            Authorization: `Bearer ${token}`, 
                         },
                     }
                 );

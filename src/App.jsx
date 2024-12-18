@@ -21,6 +21,8 @@ import Invitations from './components/Invitations';
 import GroupChat from './Pages/GroupChat';
 import FocusSessionChart from './components/FocusSessionChart';
 import DashboardLayout from './MainLayout';
+import JoinPage from './components/video_calling/JoinPage';
+import RoomPage from './components/video_calling/RoomPage';
 
 function App() {
   const { initializeAuth, loading } = useStore();
