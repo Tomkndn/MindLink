@@ -20,6 +20,8 @@ import InviteUser from './components/InviteUser';
 import Invitations from './components/Invitations';  
 import GroupChat from './Pages/GroupChat';
 import FocusSessionChart from './components/FocusSessionChart';
+import JoinPage from './components/video_calling/JoinPage';
+import RoomPage from './components/video_calling/RoomPage';
 
 function App() {
   const { initializeAuth, loading } = useStore();
@@ -102,6 +104,27 @@ function App() {
               <RedirectToProfile>
                 <Dashboard />
               </RedirectToProfile>
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+         path="/Room/:roomId"
+          element={
+            <ProtectedRoute>
+              <RedirectToProfile>
+                <RoomPage />
+              </RedirectToProfile>
+            </ProtectedRoute>
+          }
+          exact
+        />
+        
+        <Route
+          path="/joinroom"
+          element={
+            <ProtectedRoute>
+              <JoinPage />
             </ProtectedRoute>
           }
           exact
