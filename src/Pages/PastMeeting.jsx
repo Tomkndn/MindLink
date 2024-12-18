@@ -3,41 +3,41 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Dummy data for past meetings
-// const meetings = [
-//   {
-//     id: 1,
-//     heading: "Design Team Sync",
-//     owner: "Rohit Mondal",
-//     publishedDate: "2024-11-15",
-//     time: "10:00 AM",
-//     importantInfo: "Discussed new design updates and roadmap.",
-//     sharedResources: [
-//       { fileName: "DesignDocument.pdf", owner: "Rohit Mondal" },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     heading: "Development Review",
-//     owner: "Kartik Kapahi",
-//     publishedDate: "2024-11-12",
-//     time: "03:00 PM",
-//     importantInfo: "Reviewed sprint progress and tasks.",
-//     sharedResources: [
-//       { fileName: "SprintTasks.xlsx", owner: "Kartik Kapahi" },
-//     ],
-//   },
-//   {
-//     id: 3,
-//     heading: "Marketing Strategy Meeting",
-//     owner: "Steve Rogers",
-//     publishedDate: "2024-11-10",
-//     time: "02:00 PM",
-//     importantInfo: "Defined goals for Q1 marketing campaigns.",
-//     sharedResources: [
-//       { fileName: "MarketingPlan.pptx", owner: "Steve Rogers" },
-//     ],
-//   },
-// ];
+const dummy = [
+  {
+    id: 1,
+    heading: "Tomkndn",
+    owner: "Tomkndn",
+    publishedDate: "2024-11-15",
+    time: "10:00 AM",
+    importantInfo: "Discussed new design updates and roadmap.",
+    sharedResources: [
+      { fileName: "DesignDocument.pdf", owner: "Rohit Mondal" },
+    ],
+  },
+  {
+    id: 2,
+    heading: "Development Review",
+    owner: "Kartik Kapahi",
+    publishedDate: "2024-11-12",
+    time: "03:00 PM",
+    importantInfo: "Reviewed sprint progress and tasks.",
+    sharedResources: [
+      { fileName: "SprintTasks.xlsx", owner: "Kartik Kapahi" },
+    ],
+  },
+  {
+    id: 3,
+    heading: "Marketing Strategy Meeting",
+    owner: "Steve Rogers",
+    publishedDate: "2024-11-10",
+    time: "02:00 PM",
+    importantInfo: "Defined goals for Q1 marketing campaigns.",
+    sharedResources: [
+      { fileName: "MarketingPlan.pptx", owner: "Steve Rogers" },
+    ],
+  },
+];
 
 const PastMeeting = () => {
   const [isSharedResourcesOpen, setIsSharedResourcesOpen] = useState(false);
@@ -113,7 +113,7 @@ const PastMeeting = () => {
                 <p className="text-gray-700 mt-3">{meeting.description}</p>
                 <div className="flex justify-end mt-3">
                   <button
-                    onClick={() => handleSharedResourcesClick(meeting.sharedResources)}
+                    onClick={() => handleSharedResourcesClick(dummy[0].sharedResources)}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
                      Resources
@@ -148,7 +148,7 @@ const PastMeeting = () => {
                   <div className="flex items-center">
                     <CgProfile className="text-3xl text-indigo-600" />
                     <div className="ml-3">
-                      <p className="text-sm font-medium">{resource.owner}</p>
+                      <p className="text-sm font-medium">{"TomKndn"}</p>
                       <p className="text-xs text-gray-600">
                         {resource.fileName}
                       </p>
