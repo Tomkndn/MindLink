@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
-const baseUrl = import.meta.env.VITE_API_URL;
+// const baseUrl = import.meta.env.VITE_API_URL;
+const baseUrl = "http://localhost:5000"
 const useStore = create((set) => ({
   user: null,
   isAuthenticated: false,
@@ -52,8 +53,10 @@ const useStore = create((set) => ({
 
       const data = await response.json();
       set({ user: data.user, isAuthenticated: true, loading: false });
+      return {ok: true, data: data}
     } catch (err) {
       set({ loading: false, error: err.message });
+      return {ok: false,err: err.message}
     }
   },
 
@@ -95,6 +98,7 @@ signIn: async ({ email, password }) => {
     localStorage.removeItem("token");
     set({ user: null, isAuthenticated: false });
   },
-  
+
 }));
+
 export default useStore;
