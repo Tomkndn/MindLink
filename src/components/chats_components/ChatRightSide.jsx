@@ -27,7 +27,7 @@ const ChatRightSide = () => {
   const sendMsgRef = useRef();
 
   const getSender= (loggedUser, users) => {
-    return loggedUser.id===users[0]._id ? users[0] : users[1];
+    return loggedUser.user.id===users[0]._id ? users[1] : users[0];
   }
   useEffect(() => {
     socket = io(ENDPOINT);
