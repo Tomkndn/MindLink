@@ -77,12 +77,12 @@ const ChatLeftSide = () => {
           </CreateSingleChat>
           
           <IconButton size="small" color="default">
-            <NotificationsIcon />
+            <MoreVert />
           </IconButton>
         </Box>
 
         {/* Search Bar */}
-        <Box p={2}>
+        {/* <Box p={2}>
           <TextField
             variant="outlined"
             placeholder="Search chats"
@@ -92,7 +92,7 @@ const ChatLeftSide = () => {
             value={searchChat}
             onKeyDown={handleSearchChat}
           />
-        </Box>
+        </Box> */}
 
         {/* Chats List */}
         <Box flex={1} overflow="hidden">
@@ -132,7 +132,10 @@ const ChatLeftSide = () => {
                       {!chat.isGroupChat ? sender?.username || "Unknown" : chat.chatName}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" >
-                      {chat.latestMessage?.content || 'No Messages yet'}
+                      {/* {chat.latestMessage?.content || 'No Messages yet'} */}
+                      {chat.latestMessage?.content 
+                        ? chat.latestMessage.content.split(' ').slice(0, 5).join(' ') + (chat.latestMessage.content.split(' ').length > 10 ? '...' : '') 
+                        : 'No Messages yet'}
                     </Typography>
                   </Box>
                   <Typography variant="caption" color="textSecondary">
