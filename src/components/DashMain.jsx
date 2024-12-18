@@ -219,9 +219,14 @@ const DashMain = () => {
           const filteredInvites = response.data.invites.filter(invite => invite.status === 'pending'); 
         setinvites(filteredInvites); 
         } else {
+
           console.error('Error: Data structure is not as expected');
         }
     }catch(error){
+      if(error.response.status === 404)
+      {
+        alert(error.response.data.message);
+      }
       console.error('Error fetching invites:', error);
     }
   }

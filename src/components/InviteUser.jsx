@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import './InviteUser.css';
 
-// API setup
+
 const API = axios.create({
     baseURL: 'http://localhost:5000/api/group',
 });
