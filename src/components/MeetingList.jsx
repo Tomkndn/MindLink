@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import MeetingForm from "../components/MeetingForm";
+import MeetingForm from "./MeetingForm";
 import { FaUser, FaCalendarAlt, FaClock, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
