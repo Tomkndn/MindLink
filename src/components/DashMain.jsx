@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import '../DashMain.css';
-import Todo from '../components/Todo';
+import Todo from "./Todo";
 import piechart from '../assets/pie-chart.png';
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";

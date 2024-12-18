@@ -5,7 +5,7 @@ const asyncHandler = require("express-async-handler");
 
 // Send Messages
 const sendMessage = asyncHandler( async(req, res) => {
-    const {content, chatId} = req.body;
+    const {content, chatId, contentType} = req.body;
 
     if(!content || !chatId) {
         throw new CustomError("Invalid data passed into request", 400)
@@ -13,6 +13,7 @@ const sendMessage = asyncHandler( async(req, res) => {
     let newMessage = {
         sender: req.user.id,
         content: content,
+        contentType: contentType,
         chat: chatId,
     }
 
