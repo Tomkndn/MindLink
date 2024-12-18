@@ -8,8 +8,16 @@ function MeetingList() {
   const [meetings, setMeetings] = useState([]); // State to hold fetched meetings
   const [showForm, setShowForm] = useState(false);
   const [userId, setUserId] = useState(null); // State for storing the logged-in user's ID
-  const [inviteEmail, setInviteEmail] = useState(""); // State to manage the email input for invitations
+  const [inviteEmail, setInviteEmail] = useState({}); // State to manage the email input for invitations
   const navigate = useNavigate();
+
+  const handleEmailChange = (meetingId, value) => {
+    console.log(meetingId+" "+value)
+    setInviteEmail((prevEmails) => ({
+      ...prevEmails,
+      [meetingId]: value,
+    }));
+  };
 
   // Function to fetch meetings data
   const fetchMeetings = async () => {
@@ -42,18 +50,16 @@ function MeetingList() {
 
   // Function to handle meeting invitation
   const handleInvite = async (meetingId) => {
-    if (inviteEmail.trim() === "") {
-      alert("Please enter a valid email address.");
-      return;
-    }
+    
 
+    const email = inviteEmail[meetingId];
     
 
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
         `http://localhost:5000/meeting/invitation/${meetingId}`,
-        { email: inviteEmail },
+        { email: email },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -147,8 +153,8 @@ function MeetingList() {
                       type="email"
                       className="px-4 py-2 border border-gray-300 rounded-md"
                       placeholder="Enter email to invite"
-                      value={inviteEmail}
-                      onChange={(e) => setInviteEmail(e.target.value)}
+                      value={inviteEmail[meeting._id] || ""}
+                      onChange={(e) => handleEmailChange(meeting._id, e.target.value)}
                     />
                     <button
                       onClick={() => handleInvite(meeting._id)}
@@ -168,8 +174,8 @@ function MeetingList() {
                     type="email"
                     className="px-4 py-2 border border-gray-300 rounded-md"
                     placeholder="Enter email to invite"
-                    value={inviteEmail}
-                    onChange={(e) => setInviteEmail(e.target.value)}
+                    value={inviteEmail[meeting._id] || ""}
+                    onChange={(e) => handleEmailChange(meeting._id, e.target.value)}
                   />
                   <button
                     onClick={() => handleInvite(meeting._id)}
