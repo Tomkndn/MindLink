@@ -38,9 +38,43 @@ const ScrollableChat = ({messages}) => {
                             marginTop: 2,
                         }}
                     >
-                        <Typography variant="body2">
+                        {/* for text  */}
+                        {(!msg.contentType || msg.contentType === 'text') && (
+                            <Typography variant="body2">
                             {msg.content}
                         </Typography>
+                
+                        )}
+                        {/* for image */}
+                        {msg.contentType === 'image' && (
+                            <img 
+                                src={msg.content} 
+                                alt="Image" 
+                                style={{ maxWidth: "100%", borderRadius: "2px", marginTop: 4 }} 
+                            />
+                        )}
+                        {/* for video */}
+                        {msg.contentType === 'video' && (
+                            <video 
+                                src={msg.content} 
+                                controls 
+                                style={{ maxWidth: "100%", borderRadius: "6px", marginTop: 4 }} 
+                            />
+                        )}
+                        {/* for document */}
+                        {msg.contentType === 'document' && (
+                            <a 
+                                href={msg.content} 
+                                style={{
+                                    textDecoration: "none",
+                                    color: msg.sender._id === user.id ? "white" : "black",
+                                    display: "block",
+                                    marginTop: 4,
+                                }}
+                            >
+                                Download Document
+                            </a>
+                        )}
                     </Box>
                 </Box>
                 );
@@ -51,114 +85,3 @@ const ScrollableChat = ({messages}) => {
 }
 
 export default ScrollableChat;
-
-// const messages = [
-//     {
-//         _id: "1",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" }, 
-//         content: "Hey! 🍕 Don't forget our pizza night at your place this Saturday. I'm bringing my famous veggie pizza...",
-//         contentType: "text", 
-//         chat: "chat1",
-//         status: "sent",
-//         createdAt: "2024-12-09T10:00:00Z",
-//     },
-//     {
-//         _id: "2",
-//         sender: { _id: "2", name: "You", avatarUrl: "https://via.placeholder.com/40" }, 
-//         content: "Sounds delicious, Meera! 😋 Can't wait for Saturday! By the way, do you think we should get some ice cream for dessert?",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "delivered",
-//         createdAt: "2024-12-09T10:05:00Z",
-//     },
-//     {
-//         _id: "3",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Absolutely! 🍦 I'm all in for ice cream. I'll bring my favorite flavors. What's your preference?",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:10:00Z",
-//     },
-//     {
-//         _id: "4",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "By the way, what kind of pizza do you want me to bring? 😅",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "sent",
-//         createdAt: "2024-12-09T10:12:00Z",
-//     },
-//     {
-//         _id: "5",
-//         sender: { _id: "2", name: "You", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "I think a veggie pizza sounds great! Maybe a side of garlic bread too. 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "delivered",
-//         createdAt: "2024-12-09T10:15:00Z",
-//     },
-//     {
-//         _id: "6",
-//         sender: { _id: "2", name: "You", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Oh! And don't forget to bring some drinks as well. 🍹",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "delivered",
-//         createdAt: "2024-12-09T10:18:00Z",
-//     },
-//     {
-//         _id: "7",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     },
-//     {
-//         _id: "8",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     },
-//     {
-//         _id: "9",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     },
-//     {
-//         _id: "10",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     },
-//     {
-//         _id: "11",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     },
-//     {
-//         _id: "12",
-//         sender: { _id: "1", name: "Meera", avatarUrl: "https://via.placeholder.com/40" },
-//         content: "Got it! Drinks and garlic bread are on the list. See you on Saturday! 😄",
-//         contentType: "text",
-//         chat: "chat1",
-//         status: "read",
-//         createdAt: "2024-12-09T10:20:00Z",
-//     }
-// ];

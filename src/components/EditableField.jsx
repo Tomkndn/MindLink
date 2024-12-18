@@ -50,7 +50,7 @@ const EditableField = ({ label, value, onSave, type = "text" }) => {
             <span className="text-sm text-gray-500">{label}</span>
             <p className="text-gray-900">{value || "Not specified"}</p>
           </div>
-          {(label!=="Email") && <button
+          {(label!=="Email") && (label!=="Username") &&<button
             onClick={() => setIsEditing(true)}
             className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-gray-600"
           >

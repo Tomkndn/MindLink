@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import googleIcon from '../assets/googleIcon.png';
 import fbIcon from '../assets/facebookIcon.png'
 import useStore from "../store/useStore";
+import { GoogleLogin } from "@react-oauth/google";
 
 const LogIn = () => {
   const [show, setShow] = useState(false);
@@ -51,6 +52,47 @@ const LogIn = () => {
       });
     }
   }
+
+  const handleLoginSuccess = (credentialResponse) => {
+    const token = credentialResponse.credential;
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        
+        const success = await signIn({ email: data.email, password: data.password });
+
+        if (success) {
+          toast.success("Login successful.", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+          });
+          navigate("/dashboard");
+        } else {
+          toast.error(error || "Error occurred! Something went wrong.", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+          });
+        }
+      })
+      .catch((error) => toast.error("Login Failed"));
+
+    navigate("/dashboard");
+  };
+
+  const handleLoginFailure = (error) => {
+    toast.error("Login Failed");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#85C073D6]">
@@ -112,14 +154,12 @@ const LogIn = () => {
           <span className="px-2 bg-white">or</span>
         </div>
         <div className="flex flex-col gap-4">
-          <button className="flex items-center justify-center bg-gray-100 text-gray-700 border rounded-lg py-2 hover:bg-gray-200">
-            <img src={googleIcon} alt="Google" className="w-6 h-6 mr-2" />
-            Log In with Google
-          </button>
-          <button className="flex items-center justify-center bg-gray-100 text-gray-700 border rounded-lg py-2 hover:bg-gray-200">
-            <img src={fbIcon} alt="Facebook" className="w-6 h-6 mr-2" />
-            Log In with Facebook
-          </button>
+          <button className="flex items-center justify-center rounded-lg py-2 ">
+          <GoogleLogin 
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginFailure}
+            />
+            </button>
         </div>
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">

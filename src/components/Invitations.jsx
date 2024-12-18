@@ -115,16 +115,24 @@ const Invitations = () => {
         }
     };
 
+    if (!invitations) {
+      return (
+        <div className="invitations-container flex items-center justify-center bg-gray-100 p-6 rounded-lg shadow-md">
+          <p className="text-lg font-semibold text-gray-700">No invitations</p>
+        </div>
+      );
+    }
+
     return (
         <div className="invitations-container">
             {loading && <p className="loading-text">Loading...</p>}  
             {error && <div className="error">{error}</div>}
     
-            {invitations.length === 0 ? (
+            {invitations?.length === 0 ? (
                 <p className="no-invitations">No invitations available</p>
             ) : (
                 <ul className="invitations-list">
-                    {invitations.map((invite) => (
+                    {invitations?.map((invite) => (
                         <li key={invite._id} className="invitation-item">
                             <p><strong>Group Name:</strong> {invite.name}</p>
                             <p><strong>Description:</strong> {invite.description}</p>

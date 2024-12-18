@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import { toast } from "react-toastify";
 
 const UpadteProfile = () => {
-  const { user: res } = useStore();
+  const { user: res, updateProfile } = useStore();
   const [user, setUser] = useState();
   const [tempUser, setTempUser] = useState();
   const [loading, setLoading] = useState(true);
@@ -83,6 +83,15 @@ const UpadteProfile = () => {
         return;
       }
 
+      if (!tempUser.profileImage ) {
+        toast.error("Profile Image cannot be empty.", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+        setIsSaving(false);
+        return;
+      }
+
       if (!tempUser.collegeOrSchool || tempUser.collegeOrSchool.trim() === "") {
         toast.error("College cannot be empty.", {
           position: "bottom-right",
@@ -110,6 +119,10 @@ const UpadteProfile = () => {
         ...data,
       };
       setUser(updatedUser);
+
+      if(updatedUser.collegeOrSchool && updatedUser.gender && updatedUser.profileImage && updatedUser.skills.length > 0) {
+        updateProfile();
+      }
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving changes:", error);

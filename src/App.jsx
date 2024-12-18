@@ -20,6 +20,7 @@ import InviteUser from './components/InviteUser';
 import Invitations from './components/Invitations';  
 import GroupChat from './Pages/GroupChat';
 import FocusSessionChart from './components/FocusSessionChart';
+import DashboardLayout from './MainLayout';
 import JoinPage from './components/video_calling/JoinPage';
 import RoomPage from './components/video_calling/RoomPage';
 
@@ -55,50 +56,9 @@ function App() {
           }
           exact
         />
-         <Route path="/focus" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <FocusSessionTimer />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route path="/create" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <CreateGroup />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route path="/groups" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <GroupList />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route path="/groups/:groupId/invite" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <InviteUser />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route path="/invitations" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <Invitations />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route path="/groupchat" element={<ProtectedRoute>
-              <RedirectToProfile>
-                <GroupChat />
-              </RedirectToProfile>
-            </ProtectedRoute>} exact/>
-        <Route
-          path="/PastMeeting"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <PastMeeting />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
 
         <Route
-          path="/dashboard"
+          path="dashboard"
           element={
             <ProtectedRoute>
               <RedirectToProfile>
@@ -108,80 +68,151 @@ function App() {
           }
           exact
         />
-        <Route
-         path="/Room/:roomId"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <RoomPage />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
-        
-        <Route
-          path="/joinroom"
-          element={
-            <ProtectedRoute>
-              <JoinPage />
-            </ProtectedRoute>
-          }
-          exact
-        />
-        <Route
-          path="/updateprofile"
-          element={
-            <ProtectedRoute>
-              <UpdateProfile />
-            </ProtectedRoute>
-          }
-          exact
-        />
-        <Route
-          path="/resource"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <Resource />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
-        <Route
-          path="/chat"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <Chat />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
-        <Route
-          path="/meeting"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <Meeting />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
-        <Route
-          path="/chart"
-          element={
-            <ProtectedRoute>
-              <RedirectToProfile>
-                <FocusSessionChart />
-              </RedirectToProfile>
-            </ProtectedRoute>
-          }
-          exact
-        />
+
+        <Route path="/" element={<DashboardLayout />}>
+          <Route
+            path="focus"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <FocusSessionTimer />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="create"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <CreateGroup />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="groups"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <GroupList />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="groups/:groupId/invite"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <InviteUser />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="invitations"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <Invitations />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="groupchat"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <GroupChat />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="PastMeeting"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <PastMeeting />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="updateprofile"
+            element={
+              <ProtectedRoute>
+                <UpdateProfile />
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="resource"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <Resource />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="chat"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <Chat />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="meeting"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <Meeting />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+
+          <Route
+            path="chart"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <FocusSessionChart />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
+        </Route>
+
         <Route path="*" element={<NotFound />} exact />
       </Routes>
     </>
@@ -207,7 +238,7 @@ function NotFound() {
 }
 
 const Redirect = ({ children }) => {
-  const { isAuthenticated, loading, profileUpdated } = useStore();
+  const { isAuthenticated, loading } = useStore();
   const location = useLocation();
 
   if (loading) return <LoadingPage />;
