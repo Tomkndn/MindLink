@@ -3,30 +3,47 @@ import demo from "../assets/6804681.jpg";
 
 const ServiceSection = () => {
   return (
-    <div className="mb-16 relative flex items-center justify-between bg-lime-200 p-20 rounded-3xl mt-6 w-full max-w-5xl mx-auto h-96">
+    <div className="relative flex items-center justify-between bg-gradient-to-r from-lime-200 to-lime-400 p-12 rounded-3xl mt-6 w-full max-w-7xl mx-auto shadow-lg">
       {/* Left Content */}
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-6 w-1/2 ">
         {/* Badge */}
-        <div className="bg-green-700 text-white text-xl font-bold px-8 py-4 rounded-full w-max">
+        <div className="bg-green-700 text-white text-2xl font-semibold px-6 py-2 rounded-full shadow-md w-max">
           Our Services
         </div>
-        {/* Heading */}
-        <h2 className="text-2xl font-semibold">Heading for this Section</h2>
-        {/* Description */}
-        <p className="text-gray-800">
-          our leader yogesh is great<br />
-          our sub lead kundan is smart<br />
-          our friend saikat is handsome<br />
-        </p>
+
+        {/* Service List */}
+        <ul className="space-y-3 text-gray-800 text-[1.25 rem] font-medium leading-relaxed"
+        style={{fontFamily:"'Poppins', sans-serif"}}>
+          <li className="flex items-center">
+            <span className="text-green-600 mr-2 text-xl">✔</span> Live Study Sessions
+          </li>
+          <li className="flex items-center">
+            <span className="text-green-600 mr-2 text-xl">✔</span> Groups Creation
+          </li>
+          <li className="flex items-center">
+            <span className="text-green-600 mr-2 text-xl">✔</span> Meeting Scheduler
+          </li>
+          <li className="flex items-center">
+            <span className="text-green-600 mr-2 text-xl">✔</span> Notes and Resource Sharing
+          </li>
+          <li className="flex items-center">
+            <span className="text-green-600 mr-2 text-xl">✔</span> Focus Sessions
+          </li>
+        </ul>
       </div>
 
-      {/* Right Image and Box */}
-      <div className=" flex-shrink-0">
-        {/* Light Grey Image Placeholder */}
-          <img className="relative w-60 z-20" src={demo} />
-    
-        {/* Dark Grey Box Attached to Image */}
-        <div className="bg-gray-600 w-32 h-28 rounded-lg absolute top-[15rem] left-[40.25rem] z-10"></div>
+      {/* Right Content */}
+      <div className="relative w-1/2 flex justify-end">
+        {/* Background Circle Decoration */}
+        <div className="absolute -top-4 -right-4  bg-gray-600 w-44 h-44 rounded-full opacity-50 z-0"></div>
+
+        {/* Image */}
+        <img
+          src={demo}
+          alt="Service Illustration"
+          className="relative z-10 w-72 h-auto drop-shadow-lg transform hover:scale-105 transition-transform duration-300"
+        />
+        
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ const PastMeeting = () => {
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/meeting/pastmeeting");
+        const response = await axios.get("http://localhost:5000/api/meeting/recentmeetings");
         console.log(response.data);
         
         if (Array.isArray(response.data)) {

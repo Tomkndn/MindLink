@@ -20,13 +20,19 @@ const Contact = () => {
       <div className="flex flex-col space-y-4">
         {/* Heading */}
         <h2 className="text-6xl font-bold">Contact Us</h2>
+
         {/* Description */}
-        <p className="text-gray-600 leading-relaxed">
-          our leader yogesh is great<br />
-          our sub lead kundan is smart<br />
-          our friend saikat is handsome<br />
-          
-        </p>
+        <p className="text-gray-600 leading-relaxed space-y-2">
+  <span className="block">
+    <strong className="text-gray-900">Email:</strong> yogesh986.be22@chitkara.edu.in
+  </span>
+  <span className="block">
+    <strong className="text-gray-800">Alternate Email:</strong> kundan1827.be22@chitkara.edu.in
+  </span>
+  <span className="block">
+    <strong className="text-gray-800">Phone:</strong> +91 xxxxxxxx
+  </span>
+</p>
       </div>
     </div>
   );

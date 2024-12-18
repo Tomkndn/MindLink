@@ -1,4 +1,7 @@
 import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const values = [
   {
@@ -20,43 +23,71 @@ const values = [
 ];
 
 function TopSection() {
+
+   // Slick Carousel settings
+   const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3, // Number of cards to show at once
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000, // 3 seconds per slide
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
   return (
     <div>
-      <section className="text-center py-[60px] px-[40px] max-w-[2000px] mx-auto bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
-        {/* Heading */}
-        <h2
-          className="font-serif text-[36px] text-[#006400] font-bold mb-[10px]"
-          style={{ fontFamily: '"Times New Roman", Times, serif' }}
-        >
-          Top Values For You
-        </h2>
+    <section className="text-center py-[60px] px-[40px] max-w-[2000px] mx-auto bg-gradient-to-br from-[#f0f4f8] to-[#e8eef3] shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
+      {/* Heading */}
+      <h2
+        className="font-serif text-[36px] text-[#006400] font-bold mb-[10px]"
+        style={{ fontFamily: '"Times New Roman", Times, serif' }}
+      >
+        Top Values For You
+      </h2>
 
-        {/* Subheading */}
-        <p className="text-[18px] font-bold text-black mb-[30px]">
-          Try a variety of benefits when using our services
-        </p>
+      {/* Subheading */}
+      <p className="text-[18px] font-bold text-black mb-[30px]">
+        Try a variety of benefits when using our services
+      </p>
 
-        {/* Values Container */}
-        <div className="flex justify-center flex-wrap gap-8">
-          {values.map((value, index) => (
-            <div
-              key={index}
-              className="text-center max-w-xs transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-[0_8px_20px_rgba(0,0,0,0.3)]"
-            >
-              {/* Image */}
-              <img
-                src={value.image}
-                alt={value.description}
-                className="w-24 h-24 rounded-full object-cover mx-auto mb-3 border-4 border-gray-400 shadow-md hover:scale-110 hover:shadow-lg transition-transform duration-300"
-              />
-              {/* Description */}
-              <p className="text-base text-gray-700 mt-2">{value.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
+      {/* Carousel */}
+      <Slider {...settings}>
+        {values.map((value, index) => (
+          <div
+            key={index}
+            className="text-center max-w-xs mx-auto shadow-lg p-4 rounded-md"
+          >
+            {/* Image */}
+            <img
+              src={value.image}
+              alt={value.description}
+              className="w-24 h-24 rounded-full object-cover mx-auto mb-3 border-4 border-gray-400 shadow-md hover:scale-110 transition-transform duration-300"
+            />
+            {/* Description */}
+            <p className="text-base text-black-700 mt-2">{value.description}</p>
+          </div>
+        ))}
+      </Slider>
+    </section>
+  </div>
+);
 }
 
 export default TopSection;
+    

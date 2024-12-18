@@ -145,7 +145,7 @@ const SignUp = () => {
         </form>
 
         {/* OAuth SignUp */}
-        <div className="my-6 flex items-center justify-center text-gray-500">
+        {/* <div className="my-6 flex items-center justify-center text-gray-500">
           <span className="px-2 bg-white">or</span>
         </div>
         <div className="flex justify-center gap-4">
@@ -165,7 +165,7 @@ const SignUp = () => {
             />
             Sign up with Facebook
           </button>
-        </div>
+        </div> */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
