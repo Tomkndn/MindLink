@@ -5,7 +5,10 @@ import SkillsSection from "../components/SkillsSection";
 import { Save, X } from "lucide-react";
 import useStore from "../store/useStore";
 import Loading from "../components/Loading";
+import axiosInstance from "./../store/axiosInstance";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useChatState } from "../context/ChatProvider";
 
 const UpadteProfile = () => {
   const { user: res, updateProfile } = useStore();
@@ -14,6 +17,9 @@ const UpadteProfile = () => {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [groups, setgroups] = useState([]);
+  const [chats, setChats] = useState([]);
+  const [meetings, setMeetings] = useState([]);
 
   useEffect(() => {
     const fetchId = async () => {
@@ -27,7 +33,7 @@ const UpadteProfile = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${localStorage.getItem("token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
@@ -37,11 +43,85 @@ const UpadteProfile = () => {
       } catch (error) {
         console.error("Error fetching user:", error);
         toast.error("Error fetching user");
-      }finally {
+      } finally {
         setLoading(false);
       }
-    }
+    };
     fetchId();
+  }, []);
+
+  useEffect(() => {
+    const fetchAllGroups = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+        const response = await axios.get("http://localhost:5000/api/group/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.status === 200) {
+          const limitedGroups = response.data;
+          setgroups(limitedGroups);
+        }
+      } catch (err) {
+        console.error("Error fetching groups:", err);
+      }
+    };
+    fetchAllGroups();
+  }, []);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        const { data } = await axiosInstance.get("/api/chat", config);
+        setChats(data);
+      } catch (error) {
+        toast.warning("Failed to fetch chats.", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          theme: "colored",
+        });
+        return;
+      }
+    };
+    fetchChats();
+  }, []);
+
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          alert("You are not logged in. Please log in first.");
+          return;
+        }
+
+        const response = await axios.get(
+          "http://localhost:5000/meeting/upcomingmeetings",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log("Response data:", response.data);
+        setMeetings(response.data);
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+        alert("Failed to load meetings. Please try again later.");
+      }
+    };
+    fetchMeetings();
   }, []);
 
   const handleFieldUpdate = (field) => (value) => {
@@ -66,14 +146,14 @@ const UpadteProfile = () => {
     setIsSaving(true);
     try {
       if (!tempUser.skills || tempUser.skills.length === 0) {
-      toast.error("Skills array must contain at least one skill.", {
-        position: "bottom-right",
-        autoClose: 2000,
-      });
-      setIsSaving(false);
-      return;
+        toast.error("Skills array must contain at least one skill.", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
+        setIsSaving(false);
+        return;
       }
-      
+
       if (!tempUser.gender || tempUser.gender.trim() === "") {
         toast.error("Gender cannot be empty.", {
           position: "bottom-right",
@@ -83,7 +163,7 @@ const UpadteProfile = () => {
         return;
       }
 
-      if (!tempUser.profileImage ) {
+      if (!tempUser.profileImage) {
         toast.error("Profile Image cannot be empty.", {
           position: "bottom-right",
           autoClose: 2000,
@@ -100,33 +180,45 @@ const UpadteProfile = () => {
         setIsSaving(false);
         return;
       }
-      
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/user/${res.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(tempUser),
         }
       );
       const data = await response.json();
-      if(data) toast.success("Changes saved successfully", { position: "bottom-right", autoClose: 2000 });
+      if (data)
+        toast.success("Changes saved successfully", {
+          position: "bottom-right",
+          autoClose: 2000,
+        });
       const updatedUser = {
         ...user,
         ...data,
       };
       setUser(updatedUser);
 
-      if(updatedUser.collegeOrSchool && updatedUser.gender && updatedUser.profileImage && updatedUser.skills.length > 0) {
+      if (
+        updatedUser.collegeOrSchool &&
+        updatedUser.gender &&
+        updatedUser.profileImage &&
+        updatedUser.skills.length > 0
+      ) {
         updateProfile();
       }
       setIsEditing(false);
     } catch (error) {
       console.error("Error saving changes:", error);
-      toast.error("Error saving changes", { position: "bottom-right", autoClose: 2000 });
+      toast.error("Error saving changes", {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
     } finally {
       setIsSaving(false);
     }
@@ -184,19 +276,19 @@ const UpadteProfile = () => {
                 <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gray-200">
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl font-bold text-blue-600">
-                      {tempUser.groups.length}
+                      {groups.length}
                     </div>
                     <div className="text-sm text-gray-500">Groups</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl font-bold text-purple-600">
-                      {tempUser.meetings.length}
+                      {meetings.length}
                     </div>
                     <div className="text-sm text-gray-500">Meetings</div>
                   </div>
                   <div className="text-center p-4 bg-gray-50 rounded-lg">
                     <div className="text-2xl font-bold text-green-600">
-                      {tempUser.chats.length}
+                      {chats.length}
                     </div>
                     <div className="text-sm text-gray-500">Chats</div>
                   </div>
@@ -235,6 +327,6 @@ const UpadteProfile = () => {
       </main>
     </div>
   );
-}
+};
 
 export default UpadteProfile;
