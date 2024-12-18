@@ -79,7 +79,7 @@ module.exports.HandleToInvitePeople = async (req, res) => {
         }
 
         meeting.participants.push({
-            userId, 
+            username:userId, 
             invited: true,
         });
 
