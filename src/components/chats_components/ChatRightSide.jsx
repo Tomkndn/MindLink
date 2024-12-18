@@ -1,4 +1,4 @@
-import { AttachFile, MoreVert, Phone, Send, VideoCall } from '@mui/icons-material'
+import { AttachFile, SendOutlined } from '@mui/icons-material'
 import { Avatar, Box, Button, Divider, IconButton,  TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ScrollableChat from './ScrollableChat';
@@ -10,6 +10,8 @@ import useStore from '../../store/useStore';
 import axiosInstance from '../../store/axiosInstance';
 import io from 'socket.io-client';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import MediaShare from './MediaShare';
+import { useRef } from 'react';
 
 const ENDPOINT = "http://localhost:5000";
 let socket;
@@ -19,7 +21,10 @@ const ChatRightSide = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("")
   const {selectedChat, setSelectedChat} = useChatState();
-  const [socketConnected, setSocketConnected] = useState(false);
+  
+  const [newMessageType, setNewMessageType] = useState("text")
+  const [media, setMedia] = useState();
+  const sendMsgRef = useRef();
 
   const getSender= (loggedUser, users) => {
     return loggedUser.id===users[0]._id ? users[0] : users[1];
@@ -31,9 +36,11 @@ const ChatRightSide = () => {
     });
   }, [])
 
-  const sendMessage= async (e) => {
-    if(e.key==="Enter" && newMessage){
+  const sendMessage= async () => {
+    if(newMessage || media){
       try {
+        console.log(media);
+        
         let token=localStorage.getItem('token')
         const config={
           headers: {
@@ -41,14 +48,22 @@ const ChatRightSide = () => {
             Authorization: `Bearer ${token}`,
           },
         }
-
+        let mediaUrl=null;
+        if (media) {
+          // mediaUrl = await uploadToCloudinary(media); // Upload media to Cloudinary
+          mediaUrl= URL.createObjectURL(media);          
+        }
+        let content= (newMessageType==='text') ? newMessage : mediaUrl;
+        
         setNewMessage("");
+        setMedia(null);
         const {data} = await axiosInstance.post("/api/message",
           {
-            content: newMessage,
+            content: content,
             chatId: selectedChat._id,
+            contentType: newMessageType,
           }, config);
-        console.log(data.content);
+        // console.log(data.content);
         
         socket.emit("new message", data);
         setMessages([...messages, data]);
@@ -73,11 +88,11 @@ const ChatRightSide = () => {
           Authorization: `Bearer ${token}`,
         },
       }
-      console.log();
       
       const response = await axiosInstance.get(`/api/message/${selectedChat._id}`, config)
       
       setMessages(response?.data);
+      // console.log(messages);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       toast.warning('Failed to load Messages.', {
@@ -90,6 +105,29 @@ const ChatRightSide = () => {
       return;
     }
   }
+
+  const handleMediaChange= (file) => {
+    setMedia(file);
+    
+    if(file.type.startsWith('image/')){
+      setNewMessageType('image')
+    }  
+    if(file.type.startsWith('video/')){
+      setNewMessageType('video');
+    }  
+    if(file.type.startsWith('application/')){
+      setNewMessageType('application');
+    }
+  }
+  useEffect(() => {
+    if(media){
+      console.log(media);
+      console.log(newMessageType);
+      
+      sendMessage();
+    }
+  }, [media, newMessageType]);
+  
   useEffect(() => {
     fetchMessages();
 
@@ -101,7 +139,6 @@ const ChatRightSide = () => {
     })
     
   }, [messages]);
-
 
   return (
     <>
@@ -169,21 +206,23 @@ const ChatRightSide = () => {
           {/* Chat Input */}
           <Divider />
           <Box display="flex" alignItems="center" p={2} bgcolor="white">
-            <IconButton size="small" color="default">
-              <AttachFile />
-            </IconButton>
+            <MediaShare onMediaChange={handleMediaChange}>
+              <IconButton size="small" color="default">
+                <AttachFile />
+              </IconButton>
+            </MediaShare>
             <TextField
               variant="outlined"
               placeholder="Type a message"
               size="small"
               fullWidth
               sx={{ mx: 2 }}
-              onChange={(e)=>setNewMessage(e.target.value)}
+              onChange={(e)=>{setNewMessage(e.target.value)}}
               value={newMessage}
-              onKeyDown={sendMessage}
+              onKeyDown={(e) => {if(e.key==='Enter') sendMsgRef.current.click()}}
             />
-            <IconButton size="small" color="primary">
-              <KeyboardVoiceIcon />
+            <IconButton size="small" color="primary" onClick={sendMessage} ref={sendMsgRef}>
+              <SendOutlined />
             </IconButton>
           </Box>
         </Box>
