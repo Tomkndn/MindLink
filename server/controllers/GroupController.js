@@ -2,42 +2,73 @@ const Group = require('../models/GroupModel');
 const User = require('../models/User.model');
 const mongoose=require('mongoose')
 const {encryptMessage,decryptMessage}=require('../middleware/cryptoUtils');
+const { UNSAFE_RemixErrorBoundary } = require('react-router-dom');
 // Create a new group
 module.exports.createGroup = async (req, res) => {
     try {
-        const { name, description, privacy, permissions } = req.body;
+        const { name, description, privacy, permissions, adminEmail } = req.body;
+        const user = await User.findOne({ email: adminEmail });
+        if (!user) {
+            return res.status(404).json({ message: 'Admin email does not exist' });
+        }
         const group = await Group.create({
             name,
             description,
             privacy,
             permissions,
-            admin: req.user.id, 
+            admin: adminEmail,
         });
 
         res.status(201).json({ message: 'Group created successfully!', group });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating group', error: error.message });
+
+        console.error("Error creating group:", error);
+        
+        res.status(500).json({
+            message: 'Error creating group',
+            error: error.message,
+        });
     }
 };
-// Get all groups 
+
 module.exports.getGroups = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userid = req.user.id;
+        console.log("User ID: ", userid);
 
+ 
+        const user = await User.findById(userid);  
+
+        if (!user) {
+            console.log("User not found");
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        console.log("User: ", user);
+        const userEmail = user.email;  
+        console.log("User Email: ", userEmail);
+
+       
         const groups = await Group.find({
             $or: [
-                { privacy: 'public' },
-                { admin: userId }
+                { privacy: 'public' },                       
+                { admin: userEmail },                         
+                {'members.user': userEmail }  
             ]
-        }).populate('admin', 'username');
-
+        })
+        .populate('admin', 'username')   
+        .populate('members.user', 'username');  
+        console.log("Groups: ", groups);
         res.status(200).json(groups);
     } catch (error) {
+        console.error("Error fetching groups:", error);
         res.status(500).json({ message: 'Failed to fetch groups', error: error.message });
     }
 };
 
-// Get a single group by ID
+
+
+
 module.exports.getGroupById = async (req, res) => {
     try {
         const { groupId } = req.params;
@@ -60,7 +91,6 @@ module.exports.getGroupById = async (req, res) => {
     }
 };
 
-// Update group details (Admin only)
 module.exports.updateGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
@@ -81,45 +111,60 @@ module.exports.updateGroup = async (req, res) => {
     }
 };
 
-// Delete a group (Admin only)
 module.exports.deleteGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const adminId = req.user.id;
+        const adminId = req.user.id;  
+        const user = await User.findById(adminId); 
 
-        const group = await Group.findOneAndDelete({ _id: groupId, admin: adminId });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const adminEmail = user.email;
+        const group = await Group.findOneAndDelete({ _id: groupId, admin: adminEmail });
 
-        if (!group) return res.status(404).json({ message: 'Group not found or unauthorized' });
+        if (!group) {
+            return res.status(404).json({ message: 'Group not found or unauthorized' });
+        }
 
         res.status(200).json({ message: 'Group deleted successfully' });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Failed to delete group', error: error.message });
     }
 };
 
-// Join a public group
+
 module.exports.joinGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const userId = req.user.id;
+        const userId = req.user.id; 
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        console.log("User: ", user);
+
+        const userEmail = user.email;
+
+        console.log("User Email: ", userEmail);
 
         const group = await Group.findById(groupId);
 
         if (!group) return res.status(404).json({ message: 'Group not found' });
-
         if (group.privacy === 'private') {
             return res.status(403).json({ message: 'Cannot join private group' });
         }
-
-        if (group.members.some(member => member.user.toString() === userId)) {
+        if (group.members.some(member => member.user.toString() === userEmail)) {
             return res.status(400).json({ message: 'Already a member' });
         }
-
-        group.members.push({ user: userId });
+        group.members.push({ user: userEmail });
         await group.save();
 
         res.status(200).json({ message: 'Joined group successfully', group });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Failed to join group', error: error.message });
     }
 };
@@ -128,18 +173,37 @@ module.exports.inviteUser = async (req, res) => {
     try {
         const { groupId } = req.params;
         const { invitedUserEmail } = req.body; 
-        const adminId = req.user.id;
+        const userid = req.user.id;
+
+        const user = await User.findById(userid);
+
+        if(!user){
+            return res.status(404).json({ message: 'User not found' });
+        }
+        console.log("user: " + user);
+
+        const userEmail = user.email;
+        console.log("user email : " + userEmail);
         const group = await Group.findById(groupId);
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
         }
+        console.log("group admin: " + group.admin);
 
-        if (group.admin.toString() !== adminId) {
+        if (group.admin !== userEmail) {
             return res.status(403).json({ message: 'Unauthorized' });
         }
-
         if (group.invites.some(invite => invite.invitedUser === invitedUserEmail)) {
             return res.status(400).json({ message: 'User already invited' });
+        }
+
+        const invitedUser = await User.findOne({ email: invitedUserEmail });
+        if (!invitedUser) {
+            return res.status(404).json({ message: 'User with this email does not exist' });
+        }
+
+        if (group.members.some(member => member.user === invitedUserEmail)) {
+            return res.status(400).json({ message: 'User is already a member of the group' });
         }
 
         group.invites.push({ invitedUser: invitedUserEmail, status: 'pending' });
@@ -159,6 +223,7 @@ module.exports.inviteUser = async (req, res) => {
         res.status(500).json({ message: 'Failed to invite user', error: error.message });
     }
 };
+
 
  module.exports.getNotifyaboutInvites = async (req, res) => {
     try {
@@ -237,7 +302,6 @@ module.exports.acceptGroupInvite = async (req, res) => {
     }
 };
 
-// Reject an invitation to join a group
 module.exports.rejectGroupInvite = async (req, res) => {
     try {
         const { userEmail, groupId } = req.body;
@@ -285,8 +349,12 @@ module.exports.getGroupsByMember = async (req, res) => {
         }
 
         const groups = await Group.find({
-            "members.user": userEmail
-        }).select('name description privacy admin'); 
+            $or: [
+                { "members.user": userEmail },
+                { "admin": userEmail }         
+            ]
+        }).select('name description privacy admin');
+        
 
         if (!groups.length) {
             return res.status(404).json({ message: "You are not a member of any groups." });
