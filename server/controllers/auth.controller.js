@@ -1,7 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.model");
-const JWT_SECRET = "testing"
+const JWT_SECRET = process.env.JWT_SECRET;
+const { OAuth2Client } = require("google-auth-library");
+const Id = process.env.GOOGLE_CLIENT_ID;
+const client = new OAuth2Client(Id);
+
+
 const signup = async (req, res) => {
   const { name:username, email, password } = req.body;
 
@@ -68,5 +73,33 @@ const verify = async (req, res) => {
   });
 };
 
+const googleSign = async (req, res) => {
+  const { token } = req.body;
 
-module.exports = { signup, signin,verify };
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: Id,
+    });
+    
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+    const pass = await bcrypt.hash(name, 10);
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        email,
+        username: name,
+        password: pass,
+      });
+    }
+
+    res.status(200).json({ email,password: name });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ error: "Invalid User sign in" });
+  }
+};
+
+module.exports = { signup, signin, verify, googleSign };

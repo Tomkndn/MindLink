@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
-// const baseUrl = import.meta.env.VITE_API_URL;
-const baseUrl = "http://localhost:5000"
+const baseUrl = import.meta.env.VITE_API_URL;
 const useStore = create((set) => ({
   user: null,
   isAuthenticated: false,

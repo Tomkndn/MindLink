@@ -1,5 +1,10 @@
 const express = require("express");
-const {signup,signin,verify} = require("../controllers/auth.controller");
+const {
+  signup,
+  signin,
+  verify,
+  googleSign,
+} = require("../controllers/auth.controller");
 
 const router = express.Router();
 
@@ -7,6 +12,7 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/verify", verify);
+router.post("/google", googleSign);
 
 
 module.exports = router;
