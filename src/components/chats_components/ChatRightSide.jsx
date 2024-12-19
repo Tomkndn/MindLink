@@ -39,6 +39,7 @@ const ChatRightSide = () => {
   const sendMessage= async () => {
     if(newMessage || media){
       try {
+        console.log(newMessageType);
         console.log(media);
         
         let token=localStorage.getItem('token')
@@ -54,6 +55,7 @@ const ChatRightSide = () => {
           mediaUrl= URL.createObjectURL(media);          
         }
         let content= (newMessageType==='text') ? newMessage : mediaUrl;
+        console.log(content);
         
         setNewMessage("");
         setMedia(null);
@@ -217,7 +219,7 @@ const ChatRightSide = () => {
               size="small"
               fullWidth
               sx={{ mx: 2 }}
-              onChange={(e)=>{setNewMessage(e.target.value)}}
+              onChange={(e)=>{setNewMessage(e.target.value); setNewMessageType('text')}}
               value={newMessage}
               onKeyDown={(e) => {if(e.key==='Enter') sendMsgRef.current.click()}}
             />
