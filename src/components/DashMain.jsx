@@ -3,10 +3,13 @@ import '../DashMain.css';
 import Todo from "./Todo";
 import piechart from '../assets/pie-chart.png';
 import { jwtDecode } from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate , NavLink} from "react-router-dom";
 import axios from 'axios';
 import FocusSessionChart from './FocusSessionChart';
 import cross from '../assets/cross (1).png'
+import inviteimg from '../assets/cat.png';
+import meetingimg from '../assets/meeting.png';
+import bin from '../assets/delete.png';
 const DashMain = () => {
   const [MeetingData, setMeetingData] = useState([]);
   const [status, setStatus] = useState('upcoming');
@@ -24,6 +27,12 @@ const DashMain = () => {
   const [loading, setLoading] = useState(false); 
   const [invitations, setInvitations] = useState([]);
   const [error, setError] = useState('');
+  const [DeleteMeetId,setDeleteMeet] = useState(null);
+  const [attend,setattend] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Controls the visibility of the modal
+  const [email2, setEmail2] = useState(''); // Store the email address
+  const [groupid, setgroupid] = useState(' '); 
+  const [selectedGroup, setSelectedGroup] = useState(null);
   // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -110,7 +119,7 @@ const DashMain = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
-          const limitedGroups = response.data.slice(0, 6);
+          const limitedGroups = response.data;
           setgroups(limitedGroups);
         }
       } catch (err) {
@@ -262,6 +271,10 @@ const DashMain = () => {
         console.error('Error: Unexpected response structure');
       }
     } catch (error) {
+      if(error.response.status === 403)
+      {
+        alert('you are not admin , You can not send an invite');
+      }
       console.error('Error processing invite action:', error.response ? error.response.data : error.message);
       alert('There was an error processing the request.');
     }
@@ -400,6 +413,141 @@ const handleReject = async (groupId) => {
         setError('Failed to reject invitation');
     }
 };
+
+  const deleteMeeting = async (DeleteMeetId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const userEmail = localStorage.getItem('email'); // Getting userEmail from localStorage
+      const groupId = "yourGroupId"; // Ensure this is coming from state or props
+      console.log("meeting id: " + DeleteMeetId)
+      const response = await axios.delete(
+        `http://localhost:5000/meeting/delete/${DeleteMeetId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        alert('Meeting deleted successfully');
+      }
+    } catch (err) {
+      // Handle different error cases
+      if (err.response) {
+        if (err.response.status === 403) {
+          alert('You are not admin, You can not delete a meeting');
+        } else {
+          console.error('Error status:', err.response.status);
+          alert('An error occurred while deleting the meeting');
+        }
+      } else {
+        console.error('Error in useEffect:', err);
+        alert('Network error occurred');
+      }
+    }
+  };
+
+  const isMeetingTimeNow = (meetingname, meetingDate, meetingTime) => {
+
+    const [hour, minute] = meetingTime.split(':').map(num => parseInt(num));
+
+    const meetingDateTime = new Date(meetingDate);
+    meetingDateTime.setHours(hour, minute, 0, 0); 
+
+    const currentDateTime = new Date(); 
+
+    const sameDay = meetingDateTime.toDateString() === currentDateTime.toDateString();
+    
+    const thirtyMinutesInMillis = 30 * 60 * 1000;
+
+    const meetingStartTime = meetingDateTime.getTime(); 
+    const currentTime = currentDateTime.getTime(); 
+
+    const isWithinTimeRange = currentTime >= meetingStartTime &&
+                              currentTime <= (meetingStartTime + thirtyMinutesInMillis);
+
+    console.log("Meeting Time: ", meetingDateTime, "Current Time: ", currentDateTime, "Is within time range? ", isWithinTimeRange);
+
+
+    return isWithinTimeRange && sameDay;
+};
+
+
+
+  
+  const handleJoinMeeting = async (meetingid) => {
+    try {
+      const token = localStorage.getItem('token');
+      const roomcode = "myLink1"
+      window.location.href = `http://localhost:5173/room/${roomcode}`;
+      if(!attend){
+        const response = await axios.post(
+            `http://localhost:5000/api/meeting/joinmeeting/${meetingid}`, 
+            {}, 
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if(response.status === 200){
+          alert('Meeting joined successfully');
+          setattend(true);
+        }
+      }
+    } catch (err) {
+      alert("Error joining meeting: " + err);
+      console.error("Error joining meeting: " + err);
+    }
+  };
+  const formatTimeWithAMPM = (time) => {
+    // Split the time into hours and minutes
+    const [hours, minutes] = time.split(':').map(num => parseInt(num));
+    
+    // Create a new Date object for the time
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0); // Set seconds to 0 for precise formatting
+  
+    // Format the time with AM/PM
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+  };
+
+  const handleInviteClick2 = (groupid,groupname) => {
+    setgroupid(groupid);  // Store the selected group
+    setSelectedGroup(groupname);  // Store the selected group name
+    setShowModal(true); // Show the modal
+  };
+
+  const handleSendInvite2 = async () => {
+    try{
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+          `http://localhost:5000/api/group/${groupid}/invite`, 
+          { invitedUserEmail: email2 }, 
+          {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+      if(response.status === 200){
+        alert('Invite sent successfully');
+        setShowModal(false); 
+      }
+    }catch(err){
+      console.error("Error sending invite: " + err);
+      alert("Failed to send invite");
+    }
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   return (
     <>
       <div className='main-dash-section'>
@@ -410,8 +558,12 @@ const handleReject = async (groupId) => {
               <p className='dash-para1'>Your dashboard is here.</p>
             </div>
             <div className='main-div-btn'>
-              <Link to='/create'><button className='create-group-btn'>Create Group</button></Link>
-              <Link to='/meeting'><button className='create-group-btn2'>Create Meeting</button></Link>
+            <NavLink to='/create'>
+              <button className='create-group-btn'>Create Group</button>
+            </NavLink>
+            <NavLink to='/meeting'>
+              <button className='create-group-btn2'>Create Meeting</button>
+            </NavLink>
             </div>
           </div>
 
@@ -445,66 +597,69 @@ const handleReject = async (groupId) => {
                   <div className="user-info">
                   </div>
                   <div className="user-action">
-                    <h2>{group.name}</h2>
-                    <p>{group.description}</p>
+                    <h2>{group.name.length > 15 ? group.name.substring(0,13) + '...' : group.name}</h2>
+                    <p>
+                    {group.description.length > 15 ? group.description.substring(0, 13) + '...' : group.description}
+                    </p>
                     <p>Members: {group.members.length}</p>
-                    <button className="join-btn">Open</button>
+                    <button className="join-btn" onClick={() => handleInviteClick2(group._id,group.title)}>invite</button>
                   </div>
                 </div>
               ))}
             </div>
             <div className='user-files'>
             <div>
-      {invites.length > 0 ? (
-        invites.map((invite) => (
-          <div key={invite._id} className="invite-card">
-            <h2 className='invite-h2'>Hi {invite.userId.username}!</h2>
-            <p className='invite-msg'>You're invited to join <b>"{invite.meetingId.title} meeting" </b></p>
-            <button
-              onClick={() => {
-                setinvitestatus('accepted');  
-                handleInviteAction(invite.meetingId._id, invite._id, invite.userId.email); 
-            }}
-              className="invite-button">
-              Accept
-            </button>
-            <button
-              onClick={() => {
-                setinvitestatus('declined');  
-                handleInviteAction2(invite.meetingId._id, invite._id, invite.userId.email);  
-            }}
-              className="invite-button">
-              Decline
-            </button>
-          </div>
-        ))
-      ) : (
-        <p></p>
-      )}
-      {(invitations && invitations.length > 0) ? (
-  invitations.map((invite) => (
-    <div key={invite._id} className="invite-card">
-      <h2 className='invite-h2'>You're invited to join the group <b>"{invite.name}"</b></h2>
-      <p className='invite-msg'>{invite.description}</p>
-      <button
-        onClick={() => {
-          handleAccept(invite._id); // Accept invite
-        }}
-        className="invite-button">
-        Accept
-      </button>
-      <button
-        onClick={() => {
-          handleReject(invite._id); // Reject invite
-        }}
-        className="invite-button">
-        Reject
-      </button>
-    </div>
-  ))
+            {(invites?.length > 0 || invitations?.length > 0) ? (
+  <div>
+    {/* Invites */}
+    {invites?.length > 0 && invites.map((invite) => (
+      <div key={invite._id} className="invite-card">
+        <h2 className='invite-h2'>Hi {invite.userId.username}!</h2>
+        <p className='invite-msg'>You're invited to join <b>"{invite.meetingId.title} meeting"</b></p>
+        <button
+          onClick={() => {
+            setinvitestatus('accepted');
+            handleInviteAction(invite.meetingId._id, invite._id, invite.userId.email);
+          }}
+          className="invite-button">
+          Accept
+        </button>
+        <button
+          onClick={() => {
+            setinvitestatus('declined');
+            handleInviteAction2(invite.meetingId._id, invite._id, invite.userId.email);
+          }}
+          className="invite-button">
+          Decline
+        </button>
+      </div>
+    ))}
+
+    {/* Invitations */}
+    {invitations?.length > 0 && invitations.map((invite) => (
+      <div key={invite._id} className="invite-card">
+        <h2 className='invite-h2'>You're invited to join the group <b>"{invite.name}"</b></h2>
+        <p className='invite-msg'>{invite.description}</p>
+        <button
+          onClick={() => handleAccept(invite._id)} // Accept invite
+          className="invite-button">
+          Accept
+        </button>
+        <button
+          onClick={() => handleReject(invite._id)} // Reject invite
+          className="invite-button">
+          Reject
+        </button>
+      </div>
+    ))}
+  </div>
 ) : (
-  <p className="no-invitations"></p>
+  <div>
+    <img src={inviteimg} alt="No invites" className="no-invites-image" />
+    <p className='no-invite-msg'>No invites or invitations available</p>
+  </div>
 )}
+
     </div>
             </div>
           </div>
@@ -520,23 +675,30 @@ const handleReject = async (groupId) => {
             {loading ? (
               <p>Loading...</p> 
             ) : MeetingData.length === 0 ? (
-              <p>No meetings available</p>
+              <div>
+              <img src={meetingimg} className='meeting-img' ></img>
+              <p className='meeting-msg'>No meetings available</p>
+              </div>
             ) : (
               <div>
                 {MeetingData.map((meeting) => (
                   <div key={meeting._id} className="meeting-card">
                     <h3 className='meeting-title'>{meeting.title}</h3>
-                    <p><strong>Date:</strong> {new Date(meeting.date).toLocaleString()}</p>
+                    <p><strong>Date:</strong> {new Date(meeting.date).toLocaleDateString('en-GB')} ,<strong>Time:</strong> {formatTimeWithAMPM(meeting.time)}</p>
                     <p><strong>Description:</strong> {meeting.description}</p>
                     <p><strong>Status:</strong> {meeting.privacy}</p>
                     <div className='meeting-btn-div'>
-                    {status === 'upcoming' && meeting.privacy == 'public' &&(
-                        <button className='meeting-join-btn' onClick={() => handleRegisterClick(meeting._id)}>Register</button>
+                    {status === 'upcoming' && meeting.privacy === 'public' && isMeetingTimeNow(meeting.title, meeting.date, meeting.time) && (
+                      <button className='meeting-join-btn' onClick={() => handleJoinMeeting(meeting._id)}>Join</button>
+                    )}
+                      {status === 'upcoming' && meeting.privacy==='public' && !isMeetingTimeNow(meeting.title , meeting.date, meeting.time) && (
+                        <button className='meeting-join-btn1' onClick={() => handleInviteClick(meeting._id)}>Register</button>
                       )}
                       {status === 'upcoming' &&(
                         <button className='meeting-join-btn1' onClick={() => handleInviteClick(meeting._id)}>Invite</button>
                       )}
                     </div>
+                    <img src={bin} alt="delete" className='meeting-delete-btn' onClick={()=>deleteMeeting(meeting._id)}></img>
                   </div>
                 ))}
               </div>
@@ -563,7 +725,23 @@ const handleReject = async (groupId) => {
               {message && <p>{message}</p>}
             </div>
           )}
-
+          {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Invite to {selectedGroup?.name}</h3>
+            <input
+              type="email"
+              value={email2}
+              onChange={(e) => setEmail2(e.target.value)}
+              placeholder="Enter email"
+              required
+            />
+            <button onClick={handleSendInvite2}>Send</button>
+            <button onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
+          
           <h1 className='Meeting-info'>To-do</h1>
           <div className='user-to-do'>
             <Todo />

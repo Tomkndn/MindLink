@@ -8,7 +8,7 @@ import chat from '../assets/comment.png';
 import group from '../assets/people.png';
 import '../SideNav.css'
 import { Link } from 'react-router-dom';
-import { User, Grid, Clock, History, MessageCircle, LogOut } from 'lucide-react'; 
+import { User, Grid, Clock, History, MessageCircle, LogOut,Users } from 'lucide-react'; 
 import useStore from "../store/useStore";
 import { toast } from 'react-toastify';
 
@@ -29,6 +29,10 @@ const SideNav = () => {
           </Link>
           <Link to="/pastmeeting" className="item div-item4">
             <History className="icon past-meeting-icon" />
+          </Link>
+          <Link to="/groupchat" className="item div-item7">
+          {/* <img src={group} alt="groups" className="icon dash-icon" /> */}
+            <Users className="icon meeting-icon" />
           </Link>
           <Link to="/chat" className="item div-item5">
             <MessageCircle className="icon chat-icon" />

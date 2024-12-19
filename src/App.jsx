@@ -211,6 +211,17 @@ function App() {
             }
             exact
           />
+          <Route
+            path="Room/:roomId"
+            element={
+              <ProtectedRoute>
+                <RedirectToProfile>
+                  <RoomPage />
+                </RedirectToProfile>
+              </ProtectedRoute>
+            }
+            exact
+          />
         </Route>
 
         <Route path="*" element={<NotFound />} exact />

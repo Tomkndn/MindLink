@@ -111,6 +111,21 @@ ul{
     font-weight: 500;
     color: #000000;
 }
+.div-item7:hover::after{
+    content: "Groups";
+    width: 10vw;
+    height: 4vh;
+    position: absolute;
+    margin-left: 20px;
+    text-align: center;
+    padding-top: 7px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    transition: all 6s linear;
+    top:-30%;
+    font-weight: 500;
+    color: #000000;
+}
 
 .div-item4:hover::after{
     content: "Past Meetings";

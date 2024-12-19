@@ -39,14 +39,12 @@ module.exports.HandleTocreateAGroup = async (req, res) => {
 };
 
 module.exports.HandleToInvitePeople = async (req, res) => {
-  try {
-    const { email, meetingId } = req.body;
-    console.log(
-      "Received request with email:",
-      email,
-      "and meetingId:",
-      meetingId
-    );
+    try {
+
+      const currentuserid = req.user.id;
+
+        const { email, meetingId } = req.body;
+        console.log("Received request with email:", email, "and meetingId:", meetingId);
 
     if (!email || !meetingId) {
       console.log("Missing email or meetingId");
@@ -56,14 +54,15 @@ module.exports.HandleToInvitePeople = async (req, res) => {
     const meeting = await Meeting.findById(meetingId);
     const user = await User.findOne({ email });
 
-    if (!meeting) {
-      console.log("No meeting found");
-      return res.status(404).json({ error: "Meeting not found" });
-    }
-    if (!user) {
-      console.log("User not found");
-      return res.status(404).json({ error: "User not found" });
-    }
+        if (!meeting) {
+            console.log('No meeting found');
+            return res.status(404).json({ error: 'Meeting not found' });
+        }
+
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).json({ error: 'User not found' });
+        }
 
     const userId = user.id;
 
@@ -88,10 +87,10 @@ module.exports.HandleToInvitePeople = async (req, res) => {
       }
     }
 
-    meeting.participants.push({
-      username: userId,
-      invited: true,
-    });
+        meeting.participants.push({
+            username : userId, 
+            invited: true,
+        });
 
     await meeting.save();
     console.log("Meeting updated:", meeting);
@@ -209,32 +208,37 @@ module.exports.HandleToGetAllMeetings = async (req, res) => {
 module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
   try {
     const currentDate = new Date();
+    
+    // Normalize the currentDate to the start of the current day (00:00:00.000)
+    currentDate.setHours(0, 0, 0, 0);
+
     const userId = req.user.id;
+    console.log("userId: " + userId);
 
     const upcomingMeetings = await Meeting.find({
-      $or: [{ organizer: userId }, { "participants.username": userId }],
-      date: { $gte: currentDate },
-      status: { $in: ["scheduled", "completed"] },
+      $or: [{ organizer: userId }, { 'participants.username': userId }],
+      date: { $gte: currentDate },  // Get meetings on or after today, from midnight onwards
+      status: { $in: ['scheduled', 'completed'] }
     })
-      .sort({ date: 1 })
-      .populate("organizer", "username")
-      .populate("participants.username", "username")
-      .populate("attendees", "username");
+    .sort({ date: 1 })  // Sort meetings by date in ascending order
+    .populate('organizer', 'username')
+    .populate('participants.username', 'username')
+    .populate('attendees', 'username');
 
-    res.status(200).json(upcomingMeetings);
+    console.log("Upcoming meetings: ", upcomingMeetings);
+    res.status(200).json(upcomingMeetings); 
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching upcoming meetings" });
+    res.status(500).json({ error: 'An error occurred while fetching upcoming meetings' });
   }
 };
+
+  
 
 module.exports.HandleToGetRecentMeetings = async (req, res) => {
   try {
     const currentDate = new Date();
     const userId = req.user.id;
-    console.log(userId);
 
     const recentMeetings = await Meeting.find({
       date: { $lt: currentDate },
@@ -277,60 +281,62 @@ module.exports.getMeetingById = async (req, res) => {
   }
 };
 
-module.exports.register = async (req, res) => {
-  try {
-    const { meetingId } = req.params;
+  module.exports.register = async (req, res) => {
+    try {
+      const { meetingId } = req.params; 
+      const userId = req.user.id; 
+    
+      
+      const meeting = await Meeting.findById(meetingId);
+      if (!meeting) {
+        return res.status(404).json({ message: 'Meeting not found' });
+      }
+  
+      
+      if (meeting.organizer.toString() === userId) {
+        return res.status(403).json({ message: 'You cannot register for your own meeting' });
+      }
+  
+      
+      const existingParticipant = meeting.participants.find(participant => participant.userId.toString() === userId);
+  
+      if (existingParticipant) {
+        return res.status(400).json({ message: 'User has already registered for the meeting' });
+      }
+    
+      
+      meeting.participants.push({
+        userId,
+        invited: true, 
+      });
+    
+     
+      await meeting.save();
+    
+      return res.status(200).json({ message: 'Successfully registered for the meeting' });
+    } catch (err) {
+      console.error('Error registering user:', err);
+      return res.status(500).json({ message: 'Server Error' });
+    }
+  };
+  
+module.exports.HandleToDeleteMeeting = async (req, res) =>{
+  try{
+    const meetingId = req.params.meetingid;
     const userId = req.user.id;
-
+ 
     const meeting = await Meeting.findById(meetingId);
-    if (!meeting) {
-      return res.status(404).json({ message: "Meeting not found" });
+    if(!meeting){
+      return res.status(404).json({ message: 'Meeting not found' });
     }
 
-    if (meeting.organizer.toString() === userId) {
-      return res
-        .status(403)
-        .json({ message: "You cannot register for your own meeting" });
+    if(meeting.organizer.toString()!== userId){
+      return res.status(403).json({ message: 'You are not authorized to delete this meeting' });
     }
-
-    const existingParticipant = meeting.participants.find(
-      (participant) => participant.userId.toString() === userId
-    );
-
-    if (existingParticipant) {
-      return res
-        .status(400)
-        .json({ message: "User has already registered for the meeting" });
-    }
-
-    meeting.participants.push({
-      userId,
-      invited: true,
-    });
-
-    await meeting.save();
-
-    return res
-      .status(200)
-      .json({ message: "Successfully registered for the meeting" });
-  } catch (err) {
-    console.error("Error registering user:", err);
-    return res.status(500).json({ message: "Server Error" });
+    await Meeting.findOneAndDelete({_id: meetingId});
+    res.status(200).json({ message: 'Meeting deleted successfully' });
+  }catch(err){
+    console.error('Error deleting meeting:', err);
+    res.status(500).json({ message: 'Server Error' });
   }
-};
-
-module.exports.recentMeeting = async (req, res) => {
-  try {
-    const now = new Date();
-
-    const pastMeetings = await Meeting.find({ date: { $lt: now } }).populate(
-      "organizer",
-      "username"
-    );
-    console.log(pastMeetings);
-    res.status(200).json(pastMeetings);
-  } catch (error) {
-    console.error("Error fetching past meetings:", error.message);
-    res.status(500).json({ error: "Failed to fetch past meetings." });
-  }
-};
+}
