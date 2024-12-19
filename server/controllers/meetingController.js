@@ -206,38 +206,39 @@ module.exports.HandleToGetAllMeetings = async (req, res) => {
 };
 
 module.exports.HandleToGetUpcomingMeetings = async (req, res) => {
-    try {
-      const currentDate = new Date();
-      const userId = req.user.id; 
-  
-      
-      const upcomingMeetings = await Meeting.find({
-        $or: [
-          { organizer: userId }, 
-          { 'participants.username': userId }, 
-        ],
-        date: { $gte: currentDate }, 
-        status: { $in: ['scheduled', 'completed'] }, 
-      })
-        .sort({ date: 1 }) 
-        .populate('organizer', 'username') 
-        .populate('participants.username', 'username') 
-        .populate('attendees', 'username'); 
-  
-      console.log("upcomming meetings : "+upcomingMeetings)
-      res.status(200).json(upcomingMeetings); 
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching upcoming meetings' });
-    }
-  };
+  try {
+    const currentDate = new Date();
+    
+    // Normalize the currentDate to the start of the current day (00:00:00.000)
+    currentDate.setHours(0, 0, 0, 0);
+
+    const userId = req.user.id;
+    console.log("userId: " + userId);
+
+    const upcomingMeetings = await Meeting.find({
+      $or: [{ organizer: userId }, { 'participants.username': userId }],
+      date: { $gte: currentDate },  // Get meetings on or after today, from midnight onwards
+      status: { $in: ['scheduled', 'completed'] }
+    })
+    .sort({ date: 1 })  // Sort meetings by date in ascending order
+    .populate('organizer', 'username')
+    .populate('participants.username', 'username')
+    .populate('attendees', 'username');
+
+    console.log("Upcoming meetings: ", upcomingMeetings);
+    res.status(200).json(upcomingMeetings); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while fetching upcoming meetings' });
+  }
+};
+
   
 
 module.exports.HandleToGetRecentMeetings = async (req, res) => {
   try {
     const currentDate = new Date();
     const userId = req.user.id;
-    console.log(userId);
 
     const recentMeetings = await Meeting.find({
       date: { $lt: currentDate },
