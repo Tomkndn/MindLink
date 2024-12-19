@@ -4,13 +4,11 @@ const Footer = () => {
   return (
     <footer className="bg-green-800 text-white py-16">
       <div className="max-w-6xl mx-auto px-6 md:px-12 space-y-10">
-       
-         
 
         {/* Middle Section: Quick Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
           <div>
-            <h4 className="font-semibold mb-2">Company</h4>
+            <h4 className="font-semibold mb-2 ml-5">Company</h4>
             <ul className="space-y-2">
               <li>
                 <a href="/about" className="text-sm hover:text-green-400 transition">
@@ -30,7 +28,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-2">Support</h4>
+            <h4 className="font-semibold mb-2 ml-5">Support</h4>
             <ul className="space-y-2">
               <li>
                 <a href="/faq" className="text-sm hover:text-green-400 transition">
@@ -50,7 +48,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-2">Legal</h4>
+            <h4 className="font-semibold mb-2 ml-5">Legal</h4>
             <ul className="space-y-2">
               <li>
                 <a href="/terms" className="text-sm hover:text-green-400 transition">
@@ -70,7 +68,7 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-2">Connect</h4>
+            <h4 className="font-semibold mb-2 ml-5">Connect</h4>
             <ul className="space-y-2">
               <li>
                 <a
